@@ -95,7 +95,7 @@ export default {
   data() {
     return {
       isMobileDevice: false,
-      visible: true,
+      visible: false,
     };
   },
   created() {
