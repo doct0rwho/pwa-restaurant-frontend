@@ -6,11 +6,34 @@
       <Button class="transparent-button" @click="visible = true">
         <i class="pi pi-bars"></i>
       </Button>
+      <Button class="user" >
+        <i class="pi pi-search"></i>
+      </Button>
+      <Button class="search" >
+        <i class="pi pi-user"></i>
+      </Button>
       <div class="card flex justify-content-center">
     <Sidebar v-model:visible="visible" class="custom-sidebar" >
-        <!-- <Button class="transparent-button" @click="visible = false">
-          <i class="pi pi-times"></i>
-        </Button> -->
+        <Button class="cross-button" @click="visible = false">
+          <i class="pi pi-times-circle"></i>
+        </Button>
+        <div>
+          <Button class="client-auth-button" >   
+            Авторизуватися як клієнт  
+      </Button>         
+        </div>
+        <div class="client-auth-button-text">
+          Авторизація як клієнта надасть вам додаткові переваги, доступ до додаткових функцій та спростить процес замовлення та оплати
+        </div>
+        <div  style="margin-top: 10px;">
+          <Button class="staff-auth-button" >   
+            Авторизуватися як робітник   
+      </Button> 
+        
+        </div>
+        <div class="staff-auth-button-text">
+          Авторизуючись як робітник ви автоматично подаєта заяву на співбесіду за нашим керівництвом та створювєте собі тимчасовий кабінет працівника
+        </div>
     </Sidebar>
     
 </div>
@@ -33,7 +56,7 @@ export default {
   data() {
     return {
       isMobileDevice: false,
-      visible: false
+      visible: true
     };
   },
   created() {
@@ -65,24 +88,94 @@ export default {
   top: 0;
   right: 0;
 }
+.user {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 0;
+  right: 50px;
+}
+.user:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.search {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 0;
+  right: 100px;
+}
+.search:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.cross-button {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 10px;
+  right: -45px;
+}
+.cross-button:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
 .transparent-button:focus {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none; /* Remove the button shadow on focus */
 }
-.p-sidebar .p-sidebar-header .p-sidebar-close, .p-sidebar .p-sidebar-header .p-sidebar-icon {
-  display: none !important;
+.client-auth-button {
+  background: yellow;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 5px;
+  border-radius: 50px; 
+  padding: 10px 50px;
 }
-@layer primevue {
-  /* Hide the close button and icon in the sidebar header */
-  .p-sidebar .p-sidebar-header .p-sidebar-close,
-  .p-sidebar .p-sidebar-header .p-sidebar-icon {
-    display: none !important;
-  }
-
-  /* Add any additional styles you need */
-  .p-sidebar {
-    /* Your custom styles for the sidebar */
-  }
+.client-auth-button:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
-
+.client-auth-button-text {
+  background: pink;
+  border: none;
+  color: black;
+  position: absolute;
+  font-size: small;
+  top: 50px;
+  border-radius: 5px; 
+  padding: 10px 40px;
+  margin-right: 20px;
+  margin-left: 5px;
+}
+.staff-auth-button {
+  background: yellow;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 159px;
+  border-radius: 50px; 
+  padding: 10px 40px;
+}
+.staff-auth-button:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.staff-auth-button-text {
+  background: pink;
+  border: none;
+  margin-right: 20px;
+  margin-left: 5px;
+  color: black;
+  position: absolute;
+  top: 206px;
+  font-size: small;
+  border-radius: 5px; 
+  padding: 10px 40px;
+}
 </style>
