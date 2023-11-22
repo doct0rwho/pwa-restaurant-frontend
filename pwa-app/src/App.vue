@@ -34,6 +34,36 @@
         <div class="staff-auth-button-text">
           Авторизуючись як робітник ви автоматично подаєта заяву на співбесіду за нашим керівництвом та створювєте собі тимчасовий кабінет працівника
         </div>
+        <div class="divider-line1"></div>
+    <div class="contact">
+      Контактні дані
+    </div>
+    <div class="map-icon">
+      <i class="pi pi-map-marker" style="font-size: 1.5rem"></i>
+    </div>    
+    <div class="adress">      
+      Україна, Чернігівська область, м.Чернігів, вул. Гонча 6
+    </div>
+    <div class="divider-line2"></div>
+    <div class="phone-icon">
+      <i class="pi pi-phone" style="font-size: 1.5rem"></i>
+    </div>  
+    <div class="phone">      
+      0 800 500 300
+    </div>
+    <div class="divider-line3"></div>
+    <div class="social-label">
+      Наші сторінки в соціальних мережах
+    </div>
+    <div class="instagram-icon">
+      <i class="pi pi-instagram" style="font-size: 1.5rem"></i>
+    </div>
+    <div class="instagram-label">
+      Instagram
+    </div>
+    <Button class="instgramm-link-button" @click="redirrectToInstagram">      
+        <i class="pi pi-external-link" style="font-size: 1rem"></i>      
+    </Button>
     </Sidebar>
     
 </div>
@@ -69,6 +99,9 @@ export default {
         // Handle non-phone devices
         alert('This application is only available on mobile devices.');
       }
+    },
+    redirrectToInstagram() {
+      window.open('https://www.instagram.com/','_blank');
     }
 
   }
@@ -101,6 +134,7 @@ export default {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
+
 .search {
   background: none;
   border: none;
@@ -190,5 +224,99 @@ export default {
   border-radius: 5px; 
   padding: 10px 40px;
   font-family: 'Neucha';
+}
+.divider-line1 {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 335px;
+  margin-left: -16px;
+  width: 100%;
+}
+.divider-line2 {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 433px;
+  margin-left: -16px;
+  width: 100%;
+}
+.divider-line3 {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 480px;
+  margin-left: -16px;
+  width: 100%;
+}
+.contact {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 350px;
+  margin-left: 0px; 
+  font-family: 'Neucha';
+}
+.adress {
+  position: absolute;
+  top: 375px;
+  margin-left: 35px;
+  color: black;
+  font-family: 'Neucha';
+}
+.map-icon {
+  position: absolute;
+  color: black;
+  top: 380px;
+  margin-left: 0px;
+}
+.phone-icon {
+  position: absolute;
+  color: black;
+  top: 445px;
+  margin-left: 0px;
+}
+.phone {
+  position: absolute;
+  top: 445px;
+  margin-left: 35px;
+  color: black;
+  font-family: 'Neucha';
+}
+.social-label {
+  position: absolute;
+  top: 490px;
+  margin-left: 0px;
+  color: black;
+  font-family: 'Neucha';
+}
+.instagram-icon {
+  position: absolute;
+  color: black;
+  top: 517px;
+  margin-left: 0px;
+}
+.instagram-label {
+  position: absolute;
+  top: 517px;
+  margin-left: 35px;
+  color: black;
+  font-family: 'Neucha';
+}
+.instgramm-link-button {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 512px;
+  right: 20px;
+}
+.instgramm-link-button:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 </style>
