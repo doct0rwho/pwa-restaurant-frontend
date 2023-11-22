@@ -64,6 +64,15 @@
     <Button class="instgramm-link-button" @click="redirrectToInstagram">      
         <i class="pi pi-external-link" style="font-size: 1rem"></i>      
     </Button>
+    <div class="facebook-icon">
+      <i class="pi pi-facebook" style="font-size: 1.5rem"></i>
+    </div>
+    <div class="facebook-label">
+      Facebook
+    </div>
+    <Button class="facebook-link-button" @click="redirrectToFacebook">      
+        <i class="pi pi-external-link" style="font-size: 1rem"></i>
+    </Button>    
     </Sidebar>
     
 </div>
@@ -102,7 +111,11 @@ export default {
     },
     redirrectToInstagram() {
       window.open('https://www.instagram.com/','_blank');
+    },
+    redirrectToFacebook() {
+      window.open('https://www.facebook.com/','_blank');
     }
+
 
   }
 };
@@ -302,7 +315,7 @@ export default {
 }
 .instagram-label {
   position: absolute;
-  top: 517px;
+  top: 520px;
   margin-left: 35px;
   color: black;
   font-family: 'Neucha';
@@ -316,6 +329,31 @@ export default {
   right: 20px;
 }
 .instgramm-link-button:focus{
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.facebook-icon {
+  position: absolute;
+  color: black;
+  top: 560px;
+  margin-left: 0px;
+}
+.facebook-label {
+  position: absolute;
+  top: 564px;
+  margin-left: 35px;
+  color: black;
+  font-family: 'Neucha';
+}
+.facebook-link-button {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 557px;
+  right: 20px;
+}
+.facebook-link-button:focus{
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
