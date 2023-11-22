@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "core-js": "^3.8.3",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.41.0",
     "register-service-worker": "^1.7.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
@@ -37,8 +39,11 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
-  },
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    }
+  }
+  ,
   "browserslist": [
     "> 1%",
     "last 2 versions",

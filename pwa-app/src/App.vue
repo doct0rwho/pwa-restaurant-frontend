@@ -1,54 +1,42 @@
 <template>
-  <div id="nav">
-    <div class="burger-button" @click="toggleMenu">
-      <div class="burger-line"></div>
-      <div class="burger-line"></div>
-      <div class="burger-line"></div>
+  <div id="app">
+    <!-- Your existing content -->
+    <div v-if="isMobileDevice">
+     <div>
+    <Button label="Click"></Button>
+    <Button icon="pi pi-check" label="Accept"></Button>
+    <Button icon="pi pi-times" class="p-button-rounded p-button-danger"></Button>
+  </div>
     </div>
-    <div class="menu" :class="{ 'menu-open': isMenuOpen }">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div v-else>
+      <!-- Content for non-mobile devices -->
     </div>
   </div>
-  <router-view />
 </template>
 
 <script>
+
+
 export default {
+  name: 'App',
+  
   data() {
     return {
-      isMenuOpen: false
+      isMobileDevice: false
     };
   },
+  created() {
+    this.checkDevice();
+  },
   methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
+    checkDevice() {
+      this.isMobileDevice = /Mobi/i.test(navigator.userAgent) || /Android/i.test(navigator.userAgent);
+      if (!this.isMobileDevice) {
+        // Handle non-phone devices
+        alert('This application is only available on mobile devices.');
+      }
     }
   }
 };
 </script>
 
-<style>
-.burger-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 20px;
-  cursor: pointer;
-}
-
-.burger-line {
-  width: 100%;
-  height: 2px;
-  background-color: #000;
-}
-
-.menu {
-  display: none;
-}
-
-.menu-open {
-  display: block;
-}
-</style>
