@@ -56,7 +56,7 @@ export default {
   data() {
     return {
       isMobileDevice: false,
-      visible: false,
+      visible: true,
     };
   },
   created() {
@@ -134,8 +134,11 @@ export default {
   border: none;
   color: black;
   position: absolute;
-  top: 5px;
+  top: 15px;
   border-radius: 50px; 
+  margin-right: 10px;
+  width: 290px;
+  margin-left: 0px;
   padding: 10px 50px;
   font-family: 'Neucha'; /* Use 'Neucha' font and fall back to cursive if not available */
 }
@@ -150,11 +153,12 @@ export default {
   color: black;
   position: absolute;
   font-size: small;
-  top: 50px;
+  top: 70px;
   border-radius: 5px; 
   padding: 10px 40px;
   margin-right: 20px;
-  margin-left: 5px;
+  width: 290px;
+  margin-left: 0px;
   font-family: 'Neucha';
 }
 .staff-auth-button {
@@ -162,10 +166,12 @@ export default {
   border: none;
   color: black;
   position: absolute;
-  top: 159px;
+  top: 170px;
   border-radius: 50px; 
   padding: 10px 40px;
   font-family: 'Neucha';
+  width: 290px;
+  margin-left: 0px;
 }
 .staff-auth-button:focus{
   outline: none; /* Optional: Remove focus outline */
@@ -175,10 +181,11 @@ export default {
   background: rgba(249, 246, 165, 0.3);;
   border: none;
   margin-right: 20px;
-  margin-left: 5px;
+  width: 290px;
+  margin-left: 0px;
   color: black;
   position: absolute;
-  top: 206px;
+  top: 227px;
   font-size: small;
   border-radius: 5px; 
   padding: 10px 40px;
