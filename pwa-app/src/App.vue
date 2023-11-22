@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div id="app">
     <!-- Your existing content -->
     <div v-if="isMobileDevice">
@@ -76,6 +76,7 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Neucha&display=swap');
 #app {
   position: relative;
 }
@@ -129,20 +130,22 @@ export default {
   box-shadow: none; /* Remove the button shadow on focus */
 }
 .client-auth-button {
-  background: yellow;
+  background: #F9F6A5;
   border: none;
   color: black;
   position: absolute;
   top: 5px;
   border-radius: 50px; 
   padding: 10px 50px;
+  font-family: 'Neucha'; /* Use 'Neucha' font and fall back to cursive if not available */
 }
+
 .client-auth-button:focus{
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
 .client-auth-button-text {
-  background: pink;
+  background: rgba(249, 246, 165, 0.3);;
   border: none;
   color: black;
   position: absolute;
@@ -152,22 +155,24 @@ export default {
   padding: 10px 40px;
   margin-right: 20px;
   margin-left: 5px;
+  font-family: 'Neucha';
 }
 .staff-auth-button {
-  background: yellow;
+  background: #F9F6A5;
   border: none;
   color: black;
   position: absolute;
   top: 159px;
   border-radius: 50px; 
   padding: 10px 40px;
+  font-family: 'Neucha';
 }
 .staff-auth-button:focus{
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
 .staff-auth-button-text {
-  background: pink;
+  background: rgba(249, 246, 165, 0.3);;
   border: none;
   margin-right: 20px;
   margin-left: 5px;
@@ -177,5 +182,6 @@ export default {
   font-size: small;
   border-radius: 5px; 
   padding: 10px 40px;
+  font-family: 'Neucha';
 }
 </style>
