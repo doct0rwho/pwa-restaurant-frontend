@@ -22,8 +22,16 @@
                 </Button>
             </div>
             <div >
-                <div v-if="login">
-                    <GoogleLogin  :callback="callback"/>
+                <div class="google-component" v-if="login">
+                    <!-- <GoogleLogin class="google"  :callback="callback" style="color: "/> -->
+                    <Button class="google" @click="loginer">
+  <img src="/img/icons/icons8-google-48.png" alt="Google Icon" width="24" height="24">
+  <div class="google-button-text">
+    Увійти за допомогою Google
+  </div>
+</Button>
+
+
                 </div>
                 <div v-if="register">
                     
@@ -33,11 +41,16 @@
     </div>
 </template>
 <script setup>
-const callback = (response) => {
-  // This callback will be triggered when the user selects or login to
-  // his Google account from the popup
-  console.log("Handle the response", response)
+import { googleTokenLogin } from "vue3-google-login"
+
+const loginer = () => {
+  googleTokenLogin().then((response) => {
+    console.log("Handle the response", response)
+  }).catch((error) => {
+    console.log("Handle the error", error)
+  })
 }
+
 </script>
   <script>
   
@@ -104,7 +117,7 @@ const callback = (response) => {
     color: #000000 ;
 }
 .header-text {
-    position: absolute t;
+    position: absolute ;
     top: 0 ;
     left: 0 ;
     margin-left: 45px;
@@ -168,6 +181,29 @@ const callback = (response) => {
 }
 .register-button-text{
     margin-left: -35px;
+}
+.google-component{
+    display: flex;
+    justify-content: center;
+}
+.google{
+    position: absolute;
+    top: 130px ;
+    margin: 0;  
+    background: rgba(249, 246, 165, 0.3);
+  border: none;
+  color: black;    
+  border-radius: 50px;
+  padding: 10px 40px;
+  width: 300px;
+  font-family: "Neucha";
+}
+.google:focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+.google-button-text{
+  margin-left: 18px;
 }
 
 </style>
