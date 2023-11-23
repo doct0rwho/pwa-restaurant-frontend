@@ -23,7 +23,7 @@
             </div>
             <div >
                 <div v-if="login">
-                    <GoogleLogin :callback="callback"/>
+                    <GoogleLogin  :callback="callback"/>
                 </div>
                 <div v-if="register">
                     
@@ -32,7 +32,13 @@
         </div>       
     </div>
 </template>
-
+<script setup>
+const callback = (response) => {
+  // This callback will be triggered when the user selects or login to
+  // his Google account from the popup
+  console.log("Handle the response", response)
+}
+</script>
   <script>
   
   export default {
