@@ -9,13 +9,16 @@ import 'primeicons/primeicons.css';
 import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 import VueSidebarMenu from 'vue-sidebar-menu'
+import vue3GoogleLogin from 'vue3-google-login'
 
 import Sidebar from 'primevue/sidebar';
 
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
 const app = createApp(App);
-
+app.use(vue3GoogleLogin, {
+    clientId: '1078415963516-oqv1vs5r16be0gta4rup75f00tvj13b5.apps.googleusercontent.com'
+  })
 app.use(PrimeVue);
 app.use(router);
 app.use(VueSidebarMenu);
