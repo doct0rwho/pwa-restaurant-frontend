@@ -10,6 +10,7 @@ import Button from 'primevue/button';
 import Menu from 'primevue/menu';
 import VueSidebarMenu from 'vue-sidebar-menu'
 import vue3GoogleLogin from 'vue3-google-login'
+import InputText from 'primevue/inputtext';
 
 import Sidebar from 'primevue/sidebar';
 
@@ -23,6 +24,7 @@ app.use(PrimeVue);
 app.use(router);
 app.use(VueSidebarMenu);
 app.component('Button', Button);
+app.component('InputText', InputText);
 app.component('Menu', Menu);
 app.component('Sidebar', Sidebar);
 app.mount('#app');

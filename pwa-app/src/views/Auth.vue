@@ -30,11 +30,33 @@
     Увійти за допомогою Google
   </div>
 </Button>
+<!-- <div class="divider-line-left"></div> -->
+<div class="label-email">Увійдіть за допомогою електронної пошти</div>
+<!-- <div class="divider-line-right"></div> -->
 
 
                 </div>
-                <div v-if="register">
-                    
+                <div class="google-component" v-if="register">
+                      <!-- <GoogleLogin class="google"  :callback="callback" style="color: "/> -->
+                      <Button class="google" @click="loginer">
+  <img src="/img/icons/icons8-google-48.png" alt="Google Icon" width="24" height="24">
+  <div class="google-button-text-reg">
+    Зареєструватися через Google
+  </div>
+</Button>
+<!-- <div class="divider-line-left"></div> -->
+<div class="label-email-register">Зареєструватися звичайним шляхом</div>
+<!-- <div class="divider-line-right"></div> -->
+<div class="reg-input-email">
+    <InputText class="register-input" v-model="mail" placeholder="Email" />
+</div>   
+<div class="reg-input-password">
+    <InputText class="register-input" v-model="password" placeholder="Password." />
+</div>
+<div class="reg-input-password-repeat">
+    <InputText class="register-input" v-model="confirm" placeholder="Confirm passord" />
+</div>
+
                 </div>
             </div>  
         </div>       
@@ -58,8 +80,11 @@ const loginer = () => {
       name: 'About',
         data() {
             return {
-                login:  true,
-                register: false
+                login:  false,
+                register: true,
+                mail: '',
+                password: '',
+                confirm: ''
             }
         },
         methods: {
@@ -205,5 +230,110 @@ const loginer = () => {
 .google-button-text{
   margin-left: 18px;
 }
+.divider-line-left {
+  height: 1px;
+  background-color: #747070;
+  position: absolute;
+  top: 200px;
+  left: 0;
+  margin-left: -16px;
+  width: 25%;
+}
+
+
+
+.label-email{
+    position: absolute;
+    top: 193px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 20px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    font-family: "Neucha";
+
+}
+.label-email-register{
+    position: absolute;
+    top: 193px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 168px;
+    height: 20px;
+    background-color: white;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000000;
+    font-family: "Neucha";
+}
+.divider-line-right {
+    height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 200px;
+  right: 0;
+  margin-right: -16px;
+  width: 25%;
+}
+.google-button-text-reg{
+  margin-left: 8px;
+}
+.reg-input-email{
+    position: absolute;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+    
+}
+.reg-input-password{
+    position: absolute;
+  top: 270px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+    
+}
+.reg-input-password-repeat{
+    position: absolute;
+  top: 320px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+    
+}
+.register-input{
+    border: none;
+    background: rgba(249, 246, 165, 0.3);
+    border-radius: 50px;
+  padding: 10px 40px;
+  font-size: small;
+} 
+.register-input:focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+
 
 </style>
