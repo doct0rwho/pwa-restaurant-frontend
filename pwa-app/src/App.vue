@@ -146,6 +146,7 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
+  z-index: 1;
 }
 .user {
   background: none;
@@ -154,6 +155,7 @@ export default {
   position: absolute;
   top: 0;
   right: 50px;
+  z-index: 1;
 }
 .user:focus {
   outline: none; /* Optional: Remove focus outline */
@@ -167,6 +169,7 @@ export default {
   position: absolute;
   top: 0;
   right: 100px;
+  z-index: 1;
 }
 .search:focus {
   outline: none; /* Optional: Remove focus outline */
