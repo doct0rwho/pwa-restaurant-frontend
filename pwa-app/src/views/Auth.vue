@@ -64,10 +64,17 @@
 </template>
 <script setup>
 import { googleTokenLogin } from "vue3-google-login"
-
+import axios from 'axios';
 const loginer = () => {
   googleTokenLogin().then((response) => {
-    console.log("Handle the response", response)
+    console.log("Handle the response", response.access_token)
+    axios.post('https://diploma-lya6.onrender.com/google/registration', {
+      token: response.access_token
+    }).then((response) => {
+      console.log(response)
+    }).catch((error) => {
+      console.log(error)
+    })
   }).catch((error) => {
     console.log("Handle the error", error)
   })
