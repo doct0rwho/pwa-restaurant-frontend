@@ -1,5 +1,6 @@
 {
-  "name": "Resturant Management System",
+  "name": "restaurant-app",
+  "displayName": "Resturant App",
   "version": "0.1.0",
   "private": true,
   "scripts": {
