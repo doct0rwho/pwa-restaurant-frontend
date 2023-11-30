@@ -65,7 +65,10 @@
 <script setup>
 import { googleTokenLogin } from "vue3-google-login"
 import axios from 'axios';
+axios.defaults.withCredentials = true; // Include cookies in the request
+axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 const loginer = () => {
+    console.log("loginer")
   googleTokenLogin().then((response) => {
     console.log("Handle the response", response.access_token)
     axios.post('https://diploma-lya6.onrender.com/google/registration', {
