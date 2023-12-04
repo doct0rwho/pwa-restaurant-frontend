@@ -66,27 +66,29 @@
 import { googleTokenLogin } from "vue3-google-login"
 import axios from 'axios';
 axios.defaults.withCredentials = true; // Include cookies in the request
-const loginer = () => {
+const loginer = async () => {
     console.log("loginer")
-  googleTokenLogin().then((response) => {
-    console.log("Handle the response", response.access_token)
-    axios.post('https://diploma-lya6.onrender.com/google/registration', {
+    try {
+    const response = await googleTokenLogin();
+    console.log("Handle the response", response.access_token);
+
+    const registrationResponse = await axios.post('https://diploma-lya6.onrender.com/google/registration', {
       token: response.access_token
-    }).then((response) => {
-      console.log(response)
-      const store = localStorage;
+    });
+
+    console.log(registrationResponse);
+    
+    const store = localStorage;
 
     // Store token and email in local storage
-    store.setItem('token', response.data.token);
-    store.setItem('email', response.data.email);
-    this.$router.push('/');
-
-    }).catch((error) => {
-      console.log(error)
-    })
-  }).catch((error) => {
-    console.log("Handle the error", error)
-  })
+    store.setItem('token', registrationResponse.data.token);
+    store.setItem('email', registrationResponse.data.email);
+    
+    // Use $router.push('/') instead of this.$router.push('/')
+    $router.push('/');
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 </script>
