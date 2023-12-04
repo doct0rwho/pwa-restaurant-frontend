@@ -84,7 +84,9 @@ export default {
     const loginer = async () => {
       console.log('loginer');
       try {
-        const response = await googleTokenLogin();
+        const response = await googleTokenLogin().catch((error) => {
+          console.error(error);
+        });
         console.log('Handle the response', response.access_token);
 
         const registrationResponse = await axios.post('https://diploma-lya6.onrender.com/google/registration', {
