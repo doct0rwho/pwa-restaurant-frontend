@@ -85,7 +85,7 @@ const loginer = async () => {
     store.setItem('email', registrationResponse.data.email);
     
     // Use $router.push('/') instead of this.$router.push('/')
-    $router.push('/');
+    this.$router.push('/');
   } catch (error) {
     console.error(error);
   }
