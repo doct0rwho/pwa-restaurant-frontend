@@ -77,8 +77,9 @@ const loginer = () => {
       const store = localStorage;
 
     // Store token and email in local storage
-    store.setItem('token', response.token);
-    store.setItem('email', response.email);
+    store.setItem('token', response.data.token);
+    store.setItem('email', response.data.email);
+    this.$router.push('/');
 
     }).catch((error) => {
       console.log(error)
