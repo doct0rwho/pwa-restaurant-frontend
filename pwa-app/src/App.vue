@@ -192,18 +192,11 @@ export default {
       getUser() {
         const email = 'sdemchenko70@gmail.com';
 
-const config = {
-  method: 'get',
-  url: 'https://diploma-lya6.onrender.com/get/user/data',
-  headers: { 
-    'Content-Type': 'application/json'
-  },
-  params: {
-    email: email
-  }
-};
 
-      axios.request(config).then((response) => {
+
+axios.get('https://diploma-lya6.onrender.com/get/user/data', {
+          email: email,
+        }).then((response) => {
           this.user = response.data;
           console.log(this.user);
         })
