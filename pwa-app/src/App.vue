@@ -191,7 +191,7 @@ export default {
     methods: {
       getUser() {
         const email = 'sdemchenko70@gmail.com';
-
+//
 
 
 axios.get('https://diploma-lya6.onrender.com/get/user/data', {
