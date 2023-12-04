@@ -26,7 +26,7 @@
 
 <script>
 export default {
-    name: 'HomePage',
+    name: 'Home',
 }
 </script>
 <style scoped>

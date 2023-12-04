@@ -69,7 +69,7 @@ import axios from 'axios';
 axios.defaults.withCredentials = true; // Include cookies in the request
 
 export default {
-  name: 'About',
+  name: 'Auth',
   data() {
     return {
       login: false,
