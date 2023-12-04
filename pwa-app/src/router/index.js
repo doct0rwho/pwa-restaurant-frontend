@@ -4,6 +4,10 @@ import About from "@/views/Auth.vue";
 
 const routes = [
   {
+    path: '/*',
+    redirect: { name: Home }
+  },
+  {
     path: "/",
     name: "Home",
     component: Home,
