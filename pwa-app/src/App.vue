@@ -171,7 +171,7 @@ export default {
             checkerToken: false,
             email: "sdemchenko70@gmail.com",
             user: null,
-            role: "клієнт"
+            role: null
         };
     },
     
