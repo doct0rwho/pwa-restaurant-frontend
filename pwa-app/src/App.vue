@@ -27,8 +27,8 @@
             <div class="status-icon">
               <i class="pi pi-verified" style="font-size: 1.5rem; color: black;"></i>
             </div>
-            <div>
-               Статус:
+            <div class="status-label">
+               Статус: {{ role }}
             </div>
             <div>
               <Button class="personal-cabinet" @click="redirectToClientAuthPage">
@@ -42,33 +42,33 @@
             </div>
            
            
-            <div class="divider-line1"></div>
-            <div class="contact">Контактні дані</div>
-            <div class="map-icon">
+            <div class="divider-line1-reg"></div>
+            <div class="contact-reg">Контактні дані</div>
+            <div class="map-icon-reg">
               <i class="pi pi-map-marker" style="font-size: 1.5rem"></i>
             </div>
-            <div class="adress">
+            <div class="adress-reg">
               Україна, Чернігівська область, м.Чернігів, вул. Гонча 6
             </div>
-            <div class="divider-line2"></div>
-            <div class="phone-icon">
+            <div class="divider-line2-reg"></div>
+            <div class="phone-icon-reg">
               <i class="pi pi-phone" style="font-size: 1.5rem"></i>
             </div>
-            <div class="phone">0 800 500 300</div>
-            <div class="divider-line3"></div>
-            <div class="social-label">Наші сторінки в соціальних мережах</div>
-            <div class="instagram-icon">
+            <div class="phone-reg">0 800 500 300</div>
+            <div class="divider-line3-reg"></div>
+            <div class="social-label-reg">Наші сторінки в соціальних мережах</div>
+            <div class="instagram-icon-reg">
               <i class="pi pi-instagram" style="font-size: 1.5rem"></i>
             </div>
-            <div class="instagram-label">Instagram</div>
-            <Button class="instgramm-link-button" @click="redirrectToInstagram">
+            <div class="instagram-label-reg">Instagram</div>
+            <Button class="instgramm-link-button-reg" @click="redirrectToInstagram">
               <i class="pi pi-external-link" style="font-size: 1rem"></i>
             </Button>
-            <div class="facebook-icon">
+            <div class="facebook-icon-reg">
               <i class="pi pi-facebook" style="font-size: 1.5rem"></i>
             </div>
-            <div class="facebook-label">Facebook</div>
-            <Button class="facebook-link-button" @click="redirrectToFacebook">
+            <div class="facebook-label-reg">Facebook</div>
+            <Button class="facebook-link-button-reg" @click="redirrectToFacebook">
               <i class="pi pi-external-link" style="font-size: 1rem"></i>
             </Button>
             </div>
@@ -153,6 +153,7 @@
   </div>
 </template>
 
+
 <script>
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -170,6 +171,7 @@ export default {
             checkerToken: false,
             email: "sdemchenko70@gmail.com",
             user: null,
+            role: "клієнт"
         };
     },
     
@@ -186,24 +188,17 @@ export default {
         }
     },
     methods: {
-        getUser() {
-            axios
-                .get("https://diploma-lya6.onrender.com/get/user/data", {
-                    headers: {
-                        Authorization: `Bearer ${this.token}`,
-                    },
-                    body:{
-                        email: this.email,
-                    }
-                })
-                .then((response) => {
-                    this.user = response.data;
-                    console.log(this.user);
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
-        },
+      getUser() {
+      axios.get("https://diploma-lya6.onrender.com/get/user/data", {        
+            email: this.email,          
+        }).then((response) => {
+          this.user = response.data;
+          console.log(this.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
         checkToken() {
             if (localStorage.getItem("token") != null) {
                 this.token = localStorage.getItem("token");
@@ -366,12 +361,30 @@ export default {
   margin-left: -16px;
   width: 100%;
 }
+.divider-line1-reg {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 235px;
+  margin-left: -16px;
+  width: 100%;
+}
 .divider-line2 {
   /* Styles for the divider line */
   height: 1px; /* Same as the line height */
   background-color: #747070;
   position: absolute;
   top: 433px;
+  margin-left: -16px;
+  width: 100%;
+}
+.divider-line2-reg {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 333px;
   margin-left: -16px;
   width: 100%;
 }
@@ -384,12 +397,30 @@ export default {
   margin-left: -16px;
   width: 100%;
 }
+.divider-line3-reg {
+  /* Styles for the divider line */
+  height: 1px; /* Same as the line height */
+  background-color: #747070;
+  position: absolute;
+  top: 380px;
+  margin-left: -16px;
+  width: 100%;
+}
 .contact {
   background: none;
   border: none;
   color: black;
   position: absolute;
   top: 350px;
+  margin-left: 0px;
+  font-family: "Neucha";
+}
+.contact-reg {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 250px;
   margin-left: 0px;
   font-family: "Neucha";
 }
@@ -400,10 +431,23 @@ export default {
   color: black;
   font-family: "Neucha";
 }
+.adress-reg {
+  position: absolute;
+  top: 275px;
+  margin-left: 35px;
+  color: black;
+  font-family: "Neucha";
+}
 .map-icon {
   position: absolute;
   color: black;
   top: 380px;
+  margin-left: 0px;
+}
+.map-icon-reg {
+  position: absolute;
+  color: black;
+  top: 280px;
   margin-left: 0px;
 }
 .phone-icon {
@@ -412,9 +456,22 @@ export default {
   top: 445px;
   margin-left: 0px;
 }
+.phone-icon-reg {
+  position: absolute;
+  color: black;
+  top: 345px;
+  margin-left: 0px;
+}
 .phone {
   position: absolute;
   top: 445px;
+  margin-left: 35px;
+  color: black;
+  font-family: "Neucha";
+}
+.phone-reg {
+  position: absolute;
+  top: 345px;
   margin-left: 35px;
   color: black;
   font-family: "Neucha";
@@ -426,15 +483,35 @@ export default {
   color: black;
   font-family: "Neucha";
 }
+.social-label-reg {
+  position: absolute;
+  top: 390px;
+  margin-left: 0px;
+  color: black;
+  font-family: "Neucha";
+}
 .instagram-icon {
   position: absolute;
   color: black;
   top: 517px;
   margin-left: 0px;
 }
+.instagram-icon-reg {
+  position: absolute;
+  color: black;
+  top: 417px;
+  margin-left: 0px;
+}
 .instagram-label {
   position: absolute;
   top: 520px;
+  margin-left: 35px;
+  color: black;
+  font-family: "Neucha";
+}
+.instagram-label-reg {
+  position: absolute;
+  top: 420px;
   margin-left: 35px;
   color: black;
   font-family: "Neucha";
@@ -447,7 +524,19 @@ export default {
   top: 512px;
   right: 20px;
 }
+.instgramm-link-button-reg {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 412px;
+  right: 20px;
+}
 .instgramm-link-button:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.instgramm-link-button-reg:focus {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
@@ -457,9 +546,22 @@ export default {
   top: 560px;
   margin-left: 0px;
 }
+.facebook-icon-reg {
+  position: absolute;
+  color: black;
+  top: 460px;
+  margin-left: 0px;
+}
 .facebook-label {
   position: absolute;
   top: 564px;
+  margin-left: 35px;
+  color: black;
+  font-family: "Neucha";
+}
+.facebook-label-reg {
+  position: absolute;
+  top: 464px;
   margin-left: 35px;
   color: black;
   font-family: "Neucha";
@@ -472,7 +574,19 @@ export default {
   top: 557px;
   right: 20px;
 }
+.facebook-link-button-reg {
+  background: none;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 457px;
+  right: 20px;
+}
 .facebook-link-button:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.facebook-link-button-reg:focus {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
@@ -523,6 +637,13 @@ export default {
 .mail-label{
   position: absolute;
   top: 23px;
+  color: black;
+  margin-left: 35px;
+  font-family: "Neucha";
+}
+.status-label{
+  position: absolute;
+  top: 63px;
   color: black;
   margin-left: 35px;
   font-family: "Neucha";
