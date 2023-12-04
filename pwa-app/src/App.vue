@@ -190,9 +190,20 @@ export default {
     },
     methods: {
       getUser() {
-      axios.get("https://diploma-lya6.onrender.com/get/user/data", {        
-            email: localStorage.getItem("email"),          
-        }).then((response) => {
+        let data = JSON.stringify({
+  "email": "sdemchenko70@gmail.com"
+});
+
+let config = {
+  method: 'get',
+  maxBodyLength: Infinity,
+  url: 'https://diploma-lya6.onrender.com/get/user/data',
+  headers: { 
+    'Content-Type': 'application/json'
+  },
+  data : data
+};
+      axios.request(config).then((response) => {
           this.user = response.data;
           console.log(this.user);
         })
