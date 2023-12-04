@@ -8,5 +8,9 @@ module.exports = {
   },
   pwa: {
     name: 'Resturant Management System', // <---- this is PWA name
-  }
+  },
+  publicPath: '/',
+  devServer: {
+    historyApiFallback: true,
+  },
 };
