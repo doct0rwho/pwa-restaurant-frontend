@@ -73,12 +73,12 @@ const loginer = () => {
     axios.post('https://diploma-lya6.onrender.com/google/registration', {
       token: response.access_token
     }).then((response) => {
-      console.log(response.data)
+      console.log(response)
       const store = localStorage;
 
     // Store token and email in local storage
-    store.setItem('token', response.data.token);
-    store.setItem('email', response.data.email);
+    store.setItem('token', response.token);
+    store.setItem('email', response.email);
 
     }).catch((error) => {
       console.log(error)
