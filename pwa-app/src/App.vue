@@ -2,7 +2,81 @@
   <div id="app">
     <!-- Your existing content -->
     <div v-if="isMobileDevice">
-      <div>
+      <div v-if="checkerToken">
+        <Button v-if="!isAuthRoute" class="transparent-button" @click="visible = true">
+          <i class="pi pi-bars"></i>
+        </Button>
+        <Button v-if="!isAuthRoute" class="user">
+          <i class="pi pi-search"></i>
+        </Button>
+        <Button v-if="!isAuthRoute" class="search">
+          <i class="pi pi-user"></i>
+        </Button>
+        <div class="card flex justify-content-center">
+          <Sidebar v-model:visible="visible" class="custom-sidebar">
+            <div>
+            <Button class="cross-button" @click="visible = false">
+              <i class="pi pi-times-circle"></i>
+            </Button>
+            <div class="user-icon">
+              <i class="pi pi-user" style="font-size: 1.5rem; color: black;"></i>
+            </div>
+            <div class="mail-label">
+              {{ email }}
+            </div>
+            <div class="status-icon">
+              <i class="pi pi-verified" style="font-size: 1.5rem; color: black;"></i>
+            </div>
+            <div>
+               Статус:
+            </div>
+            <div>
+              <Button class="personal-cabinet" @click="redirectToClientAuthPage">
+                Перейти в особистий кабінет
+              </Button>
+            </div>
+            <div>
+              <Button class="chosen" @click="redirectToClientAuthPage">
+                Улюблені страви
+              </Button>
+            </div>
+           
+           
+            <div class="divider-line1"></div>
+            <div class="contact">Контактні дані</div>
+            <div class="map-icon">
+              <i class="pi pi-map-marker" style="font-size: 1.5rem"></i>
+            </div>
+            <div class="adress">
+              Україна, Чернігівська область, м.Чернігів, вул. Гонча 6
+            </div>
+            <div class="divider-line2"></div>
+            <div class="phone-icon">
+              <i class="pi pi-phone" style="font-size: 1.5rem"></i>
+            </div>
+            <div class="phone">0 800 500 300</div>
+            <div class="divider-line3"></div>
+            <div class="social-label">Наші сторінки в соціальних мережах</div>
+            <div class="instagram-icon">
+              <i class="pi pi-instagram" style="font-size: 1.5rem"></i>
+            </div>
+            <div class="instagram-label">Instagram</div>
+            <Button class="instgramm-link-button" @click="redirrectToInstagram">
+              <i class="pi pi-external-link" style="font-size: 1rem"></i>
+            </Button>
+            <div class="facebook-icon">
+              <i class="pi pi-facebook" style="font-size: 1.5rem"></i>
+            </div>
+            <div class="facebook-label">Facebook</div>
+            <Button class="facebook-link-button" @click="redirrectToFacebook">
+              <i class="pi pi-external-link" style="font-size: 1rem"></i>
+            </Button>
+            </div>
+          </Sidebar>
+          <router-view></router-view>
+        </div>
+      </div>       
+      <div v-else>
         <Button v-if="!isAuthRoute" class="transparent-button" @click="visible = true">
           <i class="pi pi-bars"></i>
         </Button>
@@ -71,6 +145,7 @@
           <router-view></router-view>
         </div>
       </div>
+    
     </div>
     <div v-else>
       <!-- Content for non-mobile devices -->
@@ -79,6 +154,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 export default {
     name: "App",
@@ -88,7 +165,11 @@ export default {
     data() {
         return {
             isMobileDevice: false,
-            visible: false,
+            visible: true,
+            token: null,
+            checkerToken: false,
+            email: "sdemchenko70@gmail.com",
+            user: null,
         };
     },
     
@@ -99,14 +180,37 @@ export default {
   },
     created() {
         this.checkDevice();
+        this.checkToken();
+        if (this.checkerToken) {
+            this.getUser();
+        }
     },
     methods: {
+        getUser() {
+            axios
+                .get("https://diploma-lya6.onrender.com/get/user/data", {
+                    headers: {
+                        Authorization: `Bearer ${this.token}`,
+                    },
+                    body:{
+                        email: this.email,
+                    }
+                })
+                .then((response) => {
+                    this.user = response.data;
+                    console.log(this.user);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        },
         checkToken() {
             if (localStorage.getItem("token") != null) {
-                this.$router.push("/");
+                this.token = localStorage.getItem("token");
+                this.checkerToken = true;
             }
             else {
-                this.$router.push("/auth");
+                this.checkerToken = false;
             }
         },
         checkDevice() {
@@ -371,5 +475,56 @@ export default {
 .facebook-link-button:focus {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
+}
+.personal-cabinet {
+  background: #f9f6a5;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 100px;
+  border-radius: 50px;
+  margin-right: 10px;
+  width: 290px;
+  margin-left: 0px;
+  padding: 10px 50px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+
+.personal-cabinet:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.chosen {
+  background: #f9f6a5;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 160px;
+  border-radius: 50px;
+  margin-right: 10px;
+  width: 290px;
+  margin-left: 0px;
+  padding: 10px 50px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+
+.chosen:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.user-icon{
+  position: absolute;
+  top: 20px;
+}
+.status-icon{
+  position: absolute;
+  top: 60px;
+}
+.mail-label{
+  position: absolute;
+  top: 23px;
+  color: black;
+  margin-left: 35px;
+  font-family: "Neucha";
 }
 </style>
