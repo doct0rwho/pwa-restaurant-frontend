@@ -63,6 +63,7 @@
     </div>
 </template>
 <script>
+import { useRouter } from "vue-router";
 import { googleTokenLogin } from "vue3-google-login";
 import axios from 'axios';
 axios.defaults.withCredentials = true; // Include cookies in the request
@@ -79,6 +80,7 @@ export default {
     };
   },
   setup() {
+    const $router = useRouter();
     const loginer = async () => {
       console.log("loginer");
       try {
@@ -98,7 +100,7 @@ export default {
         store.setItem('email', registrationResponse.data.email);
 
         // Use $router.push('/') instead of this.$router.push('/')
-        this.$router.push('/');
+        $router.push('/');
       } catch (error) {
         console.error(error);
       }
