@@ -169,7 +169,7 @@ export default {
             visible: true,
             token: null,
             checkerToken: false,
-            email: "sdemchenko70@gmail.com",
+            email: null,
             user: null,
             role: null
         };
@@ -184,13 +184,14 @@ export default {
         this.checkDevice();
         this.checkToken();
         if (this.checkerToken) {
+          this.email = localStorage.getItem("email");
             this.getUser();
         }
     },
     methods: {
       getUser() {
       axios.get("https://diploma-lya6.onrender.com/get/user/data", {        
-            email: this.email,          
+            email: localStorage.getItem("email"),          
         }).then((response) => {
           this.user = response.data;
           console.log(this.user);
