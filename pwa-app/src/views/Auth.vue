@@ -63,32 +63,32 @@
     </div>
 </template>
 <script>
-import { useRouter } from "vue-router";
-import { googleTokenLogin } from "vue3-google-login";
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { googleTokenLogin } from 'vue3-google-login';
 import axios from 'axios';
-axios.defaults.withCredentials = true; // Include cookies in the request
 
 export default {
   name: 'Auth',
-  data() {
-    return {
-      login: false,
-      register: true,
-      mail: '',
-      password: '',
-      confirm: ''
-    };
-  },
   setup() {
     const $router = useRouter();
+    const login = ref(false);
+    const register = ref(true);
+    const mail = ref('');
+    const password = ref('');
+    const confirm = ref('');
+
+    const redirectToHomePage = () => {
+      $router.push('/');
+    };
     const loginer = async () => {
-      console.log("loginer");
+      console.log('loginer');
       try {
         const response = await googleTokenLogin();
-        console.log("Handle the response", response.access_token);
+        console.log('Handle the response', response.access_token);
 
         const registrationResponse = await axios.post('https://diploma-lya6.onrender.com/google/registration', {
-          token: response.access_token
+          token: response.access_token,
         });
 
         console.log(registrationResponse);
@@ -100,26 +100,39 @@ export default {
         store.setItem('email', registrationResponse.data.email);
 
         // Use $router.push('/') instead of this.$router.push('/')
-        window.location.reload();
         $router.push('/');
+        window.location.reload();
       } catch (error) {
         console.error(error);
       }
     };
 
+    const toLoginForm = () => {
+      login.value = true;
+      register.value = false;
+    };
+
+    const toRegisterForm = () => {
+      login.value = false;
+      register.value = true;
+    };
+  
+
+    // Optional: Fetch initial data or perform setup on component mount
+    onMounted(() => {
+      // For example, you might want to fetch initial data here
+    });
+
     return {
+      login,
+      register,
+      mail,
+      password,
+      confirm,
+      redirectToHomePage,
       loginer,
-      toLoginForm() {
-        this.login = true;
-        this.register = false;
-      },
-      toRegisterForm() {
-        this.login = false;
-        this.register = true;
-      },
-      redirectToHomePage() {
-        this.$router.push('/');
-      },
+      toLoginForm,
+      toRegisterForm,
     };
   },
 };
