@@ -100,6 +100,7 @@ export default {
         store.setItem('email', registrationResponse.data.email);
 
         // Use $router.push('/') instead of this.$router.push('/')
+        window.location.reload();
         $router.push('/');
       } catch (error) {
         console.error(error);
