@@ -190,10 +190,7 @@ export default {
     },
     methods: {
       getUser() {
-        let data = JSON.stringify({
-  "email": "sdemchenko70@gmail.com"
-});
-
+ 
 let config = {
   method: 'get',
   maxBodyLength: Infinity,
@@ -201,7 +198,9 @@ let config = {
   headers: { 
     'Content-Type': 'application/json'
   },
-  data : data
+  data : {
+    email: "sdemchenko70@gmail.com"
+  }
 };
       axios.request(config).then((response) => {
           this.user = response.data;
