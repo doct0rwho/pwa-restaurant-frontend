@@ -62,66 +62,65 @@
         </div>       
     </div>
 </template>
-<script setup>
-import { googleTokenLogin } from "vue3-google-login"
+<script>
+import { googleTokenLogin } from "vue3-google-login";
 import axios from 'axios';
 axios.defaults.withCredentials = true; // Include cookies in the request
-const loginer = async () => {
-    console.log("loginer")
-    try {
-    const response = await googleTokenLogin();
-    console.log("Handle the response", response.access_token);
 
-    const registrationResponse = await axios.post('https://diploma-lya6.onrender.com/google/registration', {
-      token: response.access_token
-    });
+export default {
+  name: 'About',
+  data() {
+    return {
+      login: false,
+      register: true,
+      mail: '',
+      password: '',
+      confirm: ''
+    };
+  },
+  setup() {
+    const loginer = async () => {
+      console.log("loginer");
+      try {
+        const response = await googleTokenLogin();
+        console.log("Handle the response", response.access_token);
 
-    console.log(registrationResponse);
-    
-    const store = localStorage;
+        const registrationResponse = await axios.post('https://diploma-lya6.onrender.com/google/registration', {
+          token: response.access_token
+        });
 
-    // Store token and email in local storage
-    store.setItem('token', registrationResponse.data.token);
-    store.setItem('email', registrationResponse.data.email);
-    
-    // Use $router.push('/') instead of this.$router.push('/')
-    this.$router.push('/');
-  } catch (error) {
-    console.error(error);
-  }
-}
+        console.log(registrationResponse);
 
+        const store = localStorage;
+
+        // Store token and email in local storage
+        store.setItem('token', registrationResponse.data.token);
+        store.setItem('email', registrationResponse.data.email);
+
+        // Use $router.push('/') instead of this.$router.push('/')
+        this.$router.push('/');
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    return {
+      loginer,
+      toLoginForm() {
+        this.login = true;
+        this.register = false;
+      },
+      toRegisterForm() {
+        this.login = false;
+        this.register = true;
+      },
+      redirectToHomePage() {
+        this.$router.push('/');
+      },
+    };
+  },
+};
 </script>
-  <script>
-  
-  export default {
-      name: 'About',
-        data() {
-            return {
-                login:  false,
-                register: true,
-                mail: '',
-                password: '',
-                confirm: ''
-            }
-        },
-        methods: {
-            redirectToHomePage() {
-                this.$router.push('/');
-            },
-            toLoginForm() {
-                this.login = true;
-                this.register = false;
-            },
-            toRegisterForm() {
-                this.login = false;
-                this.register = true;
-            }
-
-        },
-      
-  }
-  </script>
   <style scoped>
  body {
   margin: 0;
