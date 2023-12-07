@@ -177,7 +177,7 @@ export default {
     
     computed: {
     isAuthRoute() {
-      return this.$route.path === "/";
+      return this.$route.path === "/auth";
     },
   },
     created() {

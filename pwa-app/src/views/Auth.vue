@@ -79,9 +79,9 @@ const loginer = () => {
 
     // Store token and email in local storage
     store.setItem('token', response.data.token);
-    store.setItem('email', response.data.email);    
-    router.push('/'); // Redirect to home page
+    store.setItem('email', response.data.email);        
     window.location.reload();
+    router.push('/'); // Redirect to home page
 
     }).catch((error) => {
       console.log(error)
