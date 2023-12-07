@@ -82,7 +82,7 @@ const loginer = () => {
     store.setItem('token', response.data.token);
     store.setItem('email', response.data.email);      
     
-    router.push('/'); // Redirect to home page
+    router.go('/'); // Redirect to home page
     
 
     }).catch((error) => {
@@ -92,6 +92,7 @@ const loginer = () => {
     console.log("Handle the error", error)
   })
 }
+
 
 </script>
   <script>
