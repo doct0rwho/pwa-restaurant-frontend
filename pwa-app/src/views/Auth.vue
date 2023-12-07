@@ -47,15 +47,25 @@
 <!-- <div class="divider-line-left"></div> -->
 <div class="label-email-register">Зареєструватися звичайним шляхом</div>
 <!-- <div class="divider-line-right"></div> -->
+<div class="reg-input-userName">
+    <InputText class="register-input" v-model="userName" placeholder="User name"   />
+</div>  
 <div class="reg-input-email">
-    <InputText class="register-input" v-model="mail" placeholder="Email" />
+    <InputText class="register-input" v-model="email" placeholder="Email"   />
 </div>   
 <div class="reg-input-password">
-    <InputText class="register-input" v-model="password" placeholder="Password." />
+    <InputText class="register-input" v-model="password" placeholder="Password." type="password" />
 </div>
 <div class="reg-input-password-repeat">
-    <InputText class="register-input" v-model="confirm" placeholder="Confirm passord" />
+    <InputText class="register-input" v-model="confirm" placeholder="Confirm passord" type="password"  />
 </div>
+<div>
+              <Button class="regclient-button" @click="registerClient">
+                <div class="regclient-button-text">
+                  Зареєструватися
+                </div>
+              </Button>
+            </div>
 
                 </div>
             </div>  
@@ -66,8 +76,33 @@
 import { googleTokenLogin } from "vue3-google-login"
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
+const login = ref(false);
+const register = ref(true);
+const userName = ref('');
+const email = ref('');
+const password = ref('');
+const confirm = ref('');
 const router = useRouter();
 axios.defaults.withCredentials = true; // Include cookies in the request
+
+const redirectToHomePage = () => {
+  router.push('/');
+};
+
+const toLoginForm = () => {
+  login.value = true;
+  register.value = false;
+};
+
+const toRegisterForm = () => {
+  login.value = false;
+  register.value = true;
+};
+
 const loginer = () => {  
     console.log("loginer")
   googleTokenLogin().then((response) => {
@@ -93,39 +128,34 @@ router.push('/');
     console.log("Handle the error", error)
   })
 }
+const registerClient = () => {  
+      if (!userName.value || !email.value || !password.value || !confirm.value) {
+        toast.error('Please fill in all fields.');
+        return;
+      }
+      if (password.value !== confirm.value) {
+        toast.error('Passwords do not match.');
+        return;
+      }
+      axios.post('https://diploma-lya6.onrender.com/selfRegistrationUser', {
+        userName: userName.value,
+        email: email.value,
+        password: password.value,
+        duplicatePassword: confirm.value,
+      }).then((response) => {
+        console.log(response)
+        const store = localStorage;
 
+        // Store token and email in local storage
+        store.setItem('token', response.data.token);
+        store.setItem('email', email.value);
+        
+        router.push('/');
+      }) 
+    }
 
 </script>
-  <script>
   
-  export default {
-      name: 'Auth',
-        data() {
-            return {
-                login:  false,
-                register: true,
-                mail: '',
-                password: '',
-                confirm: ''
-            }
-        },
-        methods: {
-            redirectToHomePage() {
-                this.$router.push('/');
-            },
-            toLoginForm() {
-                this.login = true;
-                this.register = false;
-            },
-            toRegisterForm() {
-                this.login = false;
-                this.register = true;
-            }
-
-        },
-      
-  }
-  </script>
   <style scoped>
  body {
   margin: 0;
@@ -304,8 +334,8 @@ router.push('/');
   margin-left: 8px;
 }
 .reg-input-email{
-    position: absolute;
-  top: 220px;
+  position: absolute;
+  top: 270px;
   left: 50%;
   transform: translateX(-40%);
   width: 300px;
@@ -318,8 +348,8 @@ router.push('/');
     
 }
 .reg-input-password{
-    position: absolute;
-  top: 270px;
+  position: absolute;
+  top: 320px;
   left: 50%;
   transform: translateX(-40%);
   width: 300px;
@@ -333,7 +363,7 @@ router.push('/');
 }
 .reg-input-password-repeat{
     position: absolute;
-  top: 320px;
+  top: 370px;
   left: 50%;
   transform: translateX(-40%);
   width: 300px;
@@ -345,6 +375,19 @@ router.push('/');
   font-family: "Neucha";
     
 }
+.reg-input-userName{
+  position: absolute;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
 .register-input{
     border: none;
     background: rgba(249, 246, 165, 0.3);
@@ -355,6 +398,29 @@ router.push('/');
 .register-input:focus {
     outline: none; /* Optional: Remove focus outline */
     box-shadow: none;
+}
+.regclient-button{
+    position: absolute;
+    top: 430px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 40px;
+    background-color: #f9f6a5;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #000000;
+    font-family: "Neucha";
+}
+.regclient-button:focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+.regclient-button-text{
+    margin-left: 40px;
 }
 
 

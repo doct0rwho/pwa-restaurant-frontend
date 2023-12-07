@@ -22,6 +22,7 @@ app.use(vue3GoogleLogin, {
   })
 app.use(PrimeVue);
 app.use(router);
+
 app.use(VueSidebarMenu);
 app.component('Button', Button);
 app.component('InputText', InputText);

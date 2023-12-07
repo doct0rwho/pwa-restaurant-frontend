@@ -22,7 +22,7 @@
               <i class="pi pi-user" style="font-size: 1.5rem; color: black;"></i>
             </div>
             <div class="mail-label">
-              {{ email }}
+              {{ userName }}
             </div>
             <div class="status-icon">
               <i class="pi pi-verified" style="font-size: 1.5rem; color: black;"></i>
@@ -174,7 +174,7 @@ export default {
             token: null,
             checkerToken: false,
             email: null,
-            user: null,
+            userName: null,          
             role: null
         };
     },
@@ -196,26 +196,25 @@ export default {
     },
     methods: {
       getUser() {
-        const email = 'sdemchenko70@gmail.com';
-        const json = {"email": "sdemchenko70@gmail.com"};
+        const email = localStorage.getItem("email");
+        
 
-        console.log(json);
-        axios.get('https://diploma-lya6.onrender.com/get/user/data', {
-  params: {
-    email: email
-  },  // Use `params` instead of `body` for GET requests
-}).then((response) => {
-          this.user = response.data;
-          console.log(this.user);
-          
-        console.log(json);
+     
+        axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
+          response.data;
+          console.log(response.data.data[0].userName);
+          this.userName = response.data.data[0].userName
+          if(response.data.data[0].role == "user"){
+            this.role = "Клієнт";
+          }
+        
         })
         .catch((error) => {
           console.log(error);          
-        console.log(json);
+       
         });
         
-        console.log(json);
+        
     },
         checkToken() {
             if (localStorage.getItem("token") != null) {
