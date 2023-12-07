@@ -197,18 +197,25 @@ export default {
     methods: {
       getUser() {
         const email = 'sdemchenko70@gmail.com';
+        const json = {"email": "sdemchenko70@gmail.com"};
 
-
-
-axios.get('https://diploma-lya6.onrender.com/get/user/data', {
-          email: email,
-        }).then((response) => {
+        console.log(json);
+        axios.get('https://diploma-lya6.onrender.com/get/user/data', {
+  params: {
+    email: email
+  },  // Use `params` instead of `body` for GET requests
+}).then((response) => {
           this.user = response.data;
           console.log(this.user);
+          
+        console.log(json);
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error);          
+        console.log(json);
         });
+        
+        console.log(json);
     },
         checkToken() {
             if (localStorage.getItem("token") != null) {
