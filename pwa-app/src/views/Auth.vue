@@ -81,7 +81,7 @@ const loginer = () => {
     // Store token and email in local storage
     store.setItem('token', response.data.token);
     store.setItem('email', response.data.email);      
-    window.location.reload(); // Reload the page
+    //window.location.reload(); // Reload the page
     router.push('/'); // Redirect to home page
 
     }).catch((error) => {
