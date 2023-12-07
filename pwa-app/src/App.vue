@@ -161,7 +161,11 @@ axios.defaults.withCredentials = true;
 export default {
     name: "App",
     mounted() {  
-    
+      this.checkToken();
+        if (this.checkerToken) {
+          this.email = localStorage.getItem("email");
+            this.getUser();
+        }
   },
     data() {
         return {
@@ -176,6 +180,7 @@ export default {
     },
     
     computed: {
+      
     isAuthRoute() {
       return this.$route.path === "/auth";
     },
