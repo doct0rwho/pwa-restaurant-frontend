@@ -96,7 +96,7 @@ const loginer = () => {
   <script>
   
   export default {
-      name: 'About',
+      name: 'Auth',
         data() {
             return {
                 login:  false,
