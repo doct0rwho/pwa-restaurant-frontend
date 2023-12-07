@@ -181,6 +181,7 @@ export default {
     },
   },
     created() {
+      window.location.reload(); // Reload the page
         this.checkDevice();
         this.checkToken();
         if (this.checkerToken) {

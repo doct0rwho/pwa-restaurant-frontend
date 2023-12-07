@@ -83,7 +83,7 @@ const loginer = () => {
     store.setItem('email', response.data.email);      
     
     router.push('/'); // Redirect to home page
-    window.location.reload(); // Reload the page
+    
 
     }).catch((error) => {
       console.log(error)
