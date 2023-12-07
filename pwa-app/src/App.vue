@@ -159,78 +159,83 @@ import axios from 'axios';
 axios.defaults.withCredentials = true;
 
 export default {
-  name: "App",
-  data() {
-    return {
-      isMobileDevice: false,
-      visible: true,
-      token: null,
-      checkerToken: false,
-      email: null,
-      user: null,
-      role: null
-    };
+    name: "App",
+    mounted() {  
+    
   },
-  computed: {
+    data() {
+        return {
+            isMobileDevice: false,
+            visible: true,
+            token: null,
+            checkerToken: false,
+            email: null,
+            user: null,
+            role: null
+        };
+    },
+    
+    computed: {
     isAuthRoute() {
       return this.$route.path === "/auth";
     },
   },
-  created() {
-    this.checkDevice();
-    this.checkToken();
-    if (this.checkerToken) {
-      this.email = localStorage.getItem("email");
-      this.getUser();
-    }
-  },
-  methods: {
-    getUser() {
-      const email = 'sdemchenko70@gmail.com';
+    created() {
+        this.checkDevice();
+        this.checkToken();
+        if (this.checkerToken) {
+          this.email = localStorage.getItem("email");
+            this.getUser();
+        }
+    },
+    methods: {
+      getUser() {
+        const email = 'sdemchenko70@gmail.com';
 
-      axios.get('https://diploma-lya6.onrender.com/get/user/data', {
-        email: email,
-      }).then((response) => {
-        this.user = response.data;
-        console.log(this.user);
-      }).catch((error) => {
-        console.log(error);
-      });
+
+
+axios.get('https://diploma-lya6.onrender.com/get/user/data', {
+          email: email,
+        }).then((response) => {
+          this.user = response.data;
+          console.log(this.user);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    checkToken() {
-      if (localStorage.getItem("token") != null) {
-        this.token = localStorage.getItem("token");
-        this.checkerToken = true;
-      } else {
-        this.checkerToken = false;
-      }
+        checkToken() {
+            if (localStorage.getItem("token") != null) {
+                this.token = localStorage.getItem("token");
+                this.checkerToken = true;
+            }
+            else {
+                this.checkerToken = false;
+            }
+        },
+        checkDevice() {
+            this.isMobileDevice =
+                /Mobi/i.test(navigator.userAgent) ||
+                    /Android/i.test(navigator.userAgent);
+            if (!this.isMobileDevice) {
+                // Handle non-phone devices
+                alert("This application is only available on mobile devices.");
+            }
+        },
+        redirrectToInstagram() {
+            window.open("https://www.instagram.com/", "_blank");
+        },
+        redirrectToFacebook() {
+            window.open("https://www.facebook.com/", "_blank");
+        },
+        redirectToClientAuthPage() {
+            this.visible = false;
+            this.$router.push("/auth");
+        },
     },
-    checkDevice() {
-      this.isMobileDevice = /Mobi/i.test(navigator.userAgent) || /Android/i.test(navigator.userAgent);
-      if (!this.isMobileDevice) {
-        // Handle non-phone devices
-        alert("This application is only available on mobile devices.");
-      }
-    },
-    redirrectToInstagram() {
-      window.open("https://www.instagram.com/", "_blank");
-    },
-    redirrectToFacebook() {
-      window.open("https://www.facebook.com/", "_blank");
-    },
-    redirectToClientAuthPage() {
-      this.visible = false;
-      this.$router.push("/auth");
-    },
-  },
-  beforeRouteUpdate(to, from, next) {
-    // This hook is called whenever the route that renders this component has changed
-    window.location.reload();
-    next();
-  },
+   
 };
 </script>
-
 
 <style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Neucha&display=swap");
