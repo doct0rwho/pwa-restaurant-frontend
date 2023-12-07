@@ -65,7 +65,7 @@
 <script setup>
 import { googleTokenLogin } from "vue3-google-login"
 import axios from 'axios';
-//import router from '../router';
+import router from '../router';
 axios.defaults.withCredentials = true; // Include cookies in the request
 const loginer = () => {  
     console.log("loginer")
@@ -80,7 +80,7 @@ const loginer = () => {
     // Store token and email in local storage
     store.setItem('token', response.data.token);
     store.setItem('email', response.data.email);    
-    $router.push('/'); // Redirect to home page
+    router.push('/'); // Redirect to home page
     window.location.reload();
 
     }).catch((error) => {
