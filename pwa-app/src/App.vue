@@ -3,7 +3,7 @@
     <!-- Your existing content -->
     <div v-if="isMobileDevice">
       <div v-if="checkerToken">
-        <Button v-if="!isAuthRoute" class="transparent-button" @click="visible = true">
+        <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
         <Button v-if="!isAuthRoute" class="user">
@@ -77,7 +77,7 @@
         </div>
       </div>       
       <div v-else>
-        <Button v-if="!isAuthRoute" class="transparent-button" @click="visible = true">
+        <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
         <Button v-if="!isAuthRoute" class="user">
@@ -170,7 +170,7 @@ export default {
     data() {
         return {
             isMobileDevice: false,
-            visible: true,
+            visible: false,
             token: null,
             checkerToken: false,
             email: null,
@@ -237,6 +237,14 @@ axios.get('https://diploma-lya6.onrender.com/get/user/data', {
         redirectToClientAuthPage() {
             this.visible = false;
             this.$router.push("/auth");
+        },
+        open() {
+          this.checkToken();
+        if (this.checkerToken) {
+          this.email = localStorage.getItem("email");
+            this.getUser();
+        }
+            this.visible = true;
         },
     },
    
