@@ -3,13 +3,13 @@
     <!-- Your existing content -->
     <div v-if="isMobileDevice">
       <div v-if="checkerToken">
-        <Button  class="transparent-button" @click="open">
+        <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button  class="user">
+        <Button v-if="!isAuthRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button  class="search">
+        <Button v-if="!isAuthRoute && !isMenuRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -267,22 +267,23 @@ export default {
 }
 
 .transparent-button {
+  position: fixed;
   background: none;
   border: none;
   color: black;
-  position: absolute;
-  top: 0;
+  /* position: absolute; */
+  top: 5px;
   right: 0;
-  z-index: 1;
+  z-index: 2;
 }
 .user {
   background: none;
   border: none;
   color: black;
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 5px;
   right: 50px;
-  z-index: 1;
+  z-index: 2;
 }
 .user:focus {
   outline: none; /* Optional: Remove focus outline */
@@ -293,10 +294,10 @@ export default {
   background: none;
   border: none;
   color: black;
-  position: absolute;
-  top: 0;
+  position: fixed;
+  top: 5px;
   right: 100px;
-  z-index: 1;
+  z-index: 2;
 }
 .search:focus {
   outline: none; /* Optional: Remove focus outline */

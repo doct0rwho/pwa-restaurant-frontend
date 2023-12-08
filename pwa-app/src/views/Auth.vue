@@ -197,7 +197,7 @@ const registerClient = () => {
         router.push('/');
       }).catch((error) => {
         if (error.response.status === 401) {
-          toast.error('Wrong email');
+          toast.error('This email is not registered. Please register first.');
         }else if(error.response.status === 405){
           toast.error('Something went wrong. Please try again.');
         }else if(error.response.status === 402){
@@ -505,7 +505,7 @@ const registerClient = () => {
 }
 .logclient-button{
     position: absolute;
-    top: 320px;
+    top: 330px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;

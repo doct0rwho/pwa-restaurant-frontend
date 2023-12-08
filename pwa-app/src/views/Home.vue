@@ -24,10 +24,12 @@
     <div class="divider-line-menu2"></div>
 </template>
 
-<script>
-export default {
-    name: 'Home',
-}
+<script setup>
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const redirrectToAbout = () => {
+  router.push('/menu');
+};
 </script>
 <style scoped>
 .image{

@@ -27,5 +27,6 @@ app.use(VueSidebarMenu);
 app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('Menu', Menu);
+
 app.component('Sidebar', Sidebar);
 app.mount('#app');
