@@ -29,27 +29,32 @@
                 {{ item.description }}
               </div>
               <div class="item-weight" v-if="!token" style="margin-bottom: 20px;">Вага: {{ item.weight }} г</div>
-              <div v-if="token" class="item-buttons">
-                <div v-if="!chosen">
-                <Button class="add-to-favorites" @click="addToFavorites(item)">
-                  <div class="add-to-favorites-text">
-                    <i class="pi pi-star" style="font-size: 1.5rem;" ></i>
-                  </div>
-                </Button>
-                </div>
-                <div v-if="chosen">
-                  <Button class="add-to-favorites" @click="addToFavorites(item)">
+              <div v-if="token" class="item-buttons" >
+                <div v-if="chosen(item.name)">
+                    <Button class="add-to-favorites" @click="removeFromFavorites(item)">
                   <div class="add-to-favorites-text">
                     <i class="pi pi-star-fill" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
-                </div>
                 <Button class="add-to-cart" @click="addToCart(item)">
                   <div class="add-to-cart-text">
                     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
                   </div>
+                </Button>  
+                </div>
+                <div v-else>                 
+                <Button class="add-to-favorites" @click="addToFavorites(item.name)">
+                  <div class="add-to-favorites-text">
+                    <i class="pi pi-star" style="font-size: 1.5rem;" ></i>
+                  </div>
                 </Button>
-               
+                <Button class="add-to-cart" @click="addToCart(item)">
+                  <div class="add-to-cart-text">
+                    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
+                  </div>
+                </Button>  
+                </div>
+                            
               </div>
             </div>
             <div class="item-image">
@@ -81,6 +86,9 @@ import axios from "axios";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+
 
 const router = useRouter();
 //const data = ref({});
@@ -105,8 +113,33 @@ onMounted(async () => {
   
 });
 
-const chosen = (name) =>{
+const addToFavorites = (name) => {
+  const email = localStorage.getItem("email");
+  const data = {
+    email: email,
+    foodName: name,
+  };
+  axios
+    .post("https://diploma-lya6.onrender.com/add/favorite/food", data)
+    .then((response) => {
+      console.log(response);
+      favorites.value.push({ foodName: name });
+    })
+    .catch((error) => {
+      console.error("Error fetching data:", error);
+      toast.error("Помилка при додаванні у вибране");
+    });
+};
 
+const chosen = (name) =>{
+    console.log('name', name);
+    const result = favorites.value.find((item) => item.foodName === name);
+    if(result){
+        return true;
+    }
+    else{
+        return false;
+    }
 };
 
 const redirectToHomePage = () => {
