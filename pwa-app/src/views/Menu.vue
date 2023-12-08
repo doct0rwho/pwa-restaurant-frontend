@@ -30,11 +30,20 @@
               </div>
               <div class="item-weight" v-if="!token" style="margin-bottom: 20px;">Вага: {{ item.weight }} г</div>
               <div v-if="token" class="item-buttons">
+                <div v-if="!chosen">
                 <Button class="add-to-favorites" @click="addToFavorites(item)">
                   <div class="add-to-favorites-text">
                     <i class="pi pi-star" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
+                </div>
+                <div v-if="chosen">
+                  <Button class="add-to-favorites" @click="addToFavorites(item)">
+                  <div class="add-to-favorites-text">
+                    <i class="pi pi-star-fill" style="font-size: 1.5rem;" ></i>
+                  </div>
+                </Button>
+                </div>
                 <Button class="add-to-cart" @click="addToCart(item)">
                   <div class="add-to-cart-text">
                     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
@@ -77,6 +86,7 @@ const router = useRouter();
 //const data = ref({});
 const sortedData = ref([]);
 const token = ref("");
+const favorites = ref([]);
 
 onMounted(async () => {
   checkerToken();
@@ -92,7 +102,12 @@ onMounted(async () => {
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
+  
 });
+
+const chosen = (name) =>{
+
+};
 
 const redirectToHomePage = () => {
   router.push("/");
@@ -102,6 +117,12 @@ const checkerToken = () => {
     token.value = false;
   } else {
     token.value = true;
+    const email = localStorage.getItem("email");
+    axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
+      console.log('response data', response.data.data[0].favorites);
+      favorites.value = response.data.data[0].favorites;
+      console.log(favorites.value);
+    } )
   }
 };
 </script>
