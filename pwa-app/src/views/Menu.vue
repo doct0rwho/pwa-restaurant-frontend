@@ -130,6 +130,25 @@ const addToFavorites = (name) => {
       toast.error("Помилка при додаванні у вибране");
     });
 };
+const removeFromFavorites = (name) => {
+    const email = localStorage.getItem("email");
+    const data = {
+        email: email,
+        foodName: name.name,
+    };
+    axios
+        .post("https://diploma-lya6.onrender.com/remove/favorite/food", data)
+        .then((response) => {
+        console.log(response);
+        const index = favorites.value.findIndex((item) => item.foodName === name.name);
+        favorites.value.splice(index, 1);
+        })
+        .catch((error) => {
+        console.error("Error fetching data:", error);
+        toast.error("Помилка при видаленні з вибраного");
+        });
+    };
+
 
 const chosen = (name) =>{
     console.log('name', name);
