@@ -1,6 +1,7 @@
 import { createWebHistory, createRouter } from "vue-router";
 import Home from "@/views/Home.vue";
 import About from "@/views/Auth.vue";
+import Menu from "@/views/Menu.vue";
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path: "/auth",
     name: "Auth",
     component: About,
+  },
+  {
+    path: "/menu",
+    name: "Menu",
+    component: Menu,
   },
 ];
 

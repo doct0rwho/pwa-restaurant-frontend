@@ -3,13 +3,13 @@
     <!-- Your existing content -->
     <div v-if="isMobileDevice">
       <div v-if="checkerToken">
-        <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
+        <Button  class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button v-if="!isAuthRoute" class="user">
+        <Button  class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute" class="search">
+        <Button  class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -83,7 +83,7 @@
         <Button v-if="!isAuthRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute" class="search">
+        <Button v-if="!isAuthRoute  && !isMenuRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -184,6 +184,9 @@ export default {
     isAuthRoute() {
       return this.$route.path === "/auth";
     },
+    isMenuRoute() {
+      return this.$route.path === "/menu";
+  },
   },
     created() {
       

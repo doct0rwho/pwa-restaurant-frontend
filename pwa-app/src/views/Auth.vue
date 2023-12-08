@@ -33,8 +33,19 @@
 <!-- <div class="divider-line-left"></div> -->
 <div class="label-email">Увійдіть за допомогою електронної пошти</div>
 <!-- <div class="divider-line-right"></div> -->
-
-
+<div class="log-input-email">
+    <InputText class="register-input" v-model="email" placeholder="Email"   />
+</div>   
+<div class="log-input-password">
+    <InputText class="register-input" v-model="password" placeholder="Password" type="password" />
+</div>
+<div>
+              <Button class="logclient-button" @click="loginClient">
+                <div class="regclient-button-text">
+                  Авторизуватися
+                </div>
+              </Button>
+            </div>
                 </div>
                 <div class="google-component" v-if="register">
                       <!-- <GoogleLogin class="google"  :callback="callback" style="color: "/> -->
@@ -54,7 +65,7 @@
     <InputText class="register-input" v-model="email" placeholder="Email"   />
 </div>   
 <div class="reg-input-password">
-    <InputText class="register-input" v-model="password" placeholder="Password." type="password" />
+    <InputText class="register-input" v-model="password" placeholder="Password" type="password" />
 </div>
 <div class="reg-input-password-repeat">
     <InputText class="register-input" v-model="confirm" placeholder="Confirm passord" type="password"  />
@@ -80,8 +91,8 @@ import { ref } from 'vue';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
-const login = ref(false);
-const register = ref(true);
+const login = ref(true);
+const register = ref(false);
 const userName = ref('');
 const email = ref('');
 const password = ref('');
@@ -96,11 +107,19 @@ const redirectToHomePage = () => {
 const toLoginForm = () => {
   login.value = true;
   register.value = false;
+  userName.value = '';
+  email.value = '';
+  password.value = '';
+  confirm.value = '';
 };
 
 const toRegisterForm = () => {
   login.value = false;
   register.value = true;
+  userName.value = '';
+  email.value = '';
+  password.value = '';
+  confirm.value = '';
 };
 
 const loginer = () => {  
@@ -151,9 +170,45 @@ const registerClient = () => {
         store.setItem('email', email.value);
         
         router.push('/');
+      }).catch((error) => {
+         if(error.response.status === 401){
+          toast.error('Email already exists');
+         }else{
+          toast.error('Something went wrong. Please try again.');
+         }
       }) 
     }
+    const loginClient = () => {  
+      if ( !email.value || !password.value ) {
+        toast.error('Please fill in all fields.');
+        return;
+      }     
+      axios.post('https://diploma-lya6.onrender.com/login/with/password/user', {
+        email: email.value,
+        password: password.value,        
+      }).then((response) => {
+        console.log(response)
+        const store = localStorage;
 
+        // Store token and email in local storage
+        store.setItem('token', response.data.token);
+        store.setItem('email', email.value);
+        
+        router.push('/');
+      }).catch((error) => {
+        if (error.response.status === 401) {
+          toast.error('Wrong email');
+        }else if(error.response.status === 405){
+          toast.error('Something went wrong. Please try again.');
+        }else if(error.response.status === 402){
+          toast.error('Wrong password');
+        }else if(error.response.status === 403){
+          toast.error('This email registered with Google. Please login with Google');
+        }else{
+          toast.error('Something went wrong. Please try again.');
+        }
+      }) 
+    }
 </script>
   
   <style scoped>
@@ -422,6 +477,51 @@ const registerClient = () => {
 .regclient-button-text{
     margin-left: 40px;
 }
-
+.log-input-email{
+  position: absolute;
+  top: 220px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.log-input-password{
+  position: absolute;
+  top: 270px;
+  left: 50%;
+  transform: translateX(-40%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.logclient-button{
+    position: absolute;
+    top: 320px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 40px;
+    background-color: #f9f6a5;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 40px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #000000;
+    font-family: "Neucha";
+}
+.logclient-button:focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
 
 </style>
