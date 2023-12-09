@@ -392,7 +392,7 @@ const registerClient = () => {
   position: absolute;
   top: 270px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;
@@ -406,7 +406,7 @@ const registerClient = () => {
   position: absolute;
   top: 320px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;
@@ -420,7 +420,7 @@ const registerClient = () => {
     position: absolute;
   top: 370px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;
@@ -434,7 +434,7 @@ const registerClient = () => {
   position: absolute;
   top: 220px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;
@@ -448,6 +448,8 @@ const registerClient = () => {
     background: rgba(249, 246, 165, 0.3);
     border-radius: 50px;
   padding: 10px 40px;
+  width: 300px;
+  color: #000;
   font-size: small;
 } 
 .register-input:focus {
@@ -481,7 +483,7 @@ const registerClient = () => {
   position: absolute;
   top: 220px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;
@@ -494,7 +496,7 @@ const registerClient = () => {
   position: absolute;
   top: 270px;
   left: 50%;
-  transform: translateX(-40%);
+  transform: translateX(-50%);
   width: 300px;
   height: 40px;
   background-color: white;

@@ -6,10 +6,10 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button v-if="!isAuthRoute" class="user">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute && !isMenuRoute" class="search">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -31,12 +31,12 @@
                Статус: {{ role }}
             </div>
             <div>
-              <Button class="personal-cabinet" @click="redirectToClientAuthPage">
+              <Button class="personal-cabinet" @click="redirectToProfile">
                 Перейти в особистий кабінет
               </Button>
             </div>
             <div>
-              <Button class="chosen" @click="redirectToClientAuthPage">
+              <Button class="chosen" @click="redirectToFavorites">
                 Улюблені страви
               </Button>
             </div>
@@ -80,10 +80,10 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button v-if="!isAuthRoute" class="user">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute  && !isMenuRoute" class="search">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -187,6 +187,15 @@ export default {
     isMenuRoute() {
       return this.$route.path === "/menu";
   },
+    isFavoritesRoute() {
+      return this.$route.path === "/favorites";
+  },
+    isProfileRoute() {
+      return this.$route.path === "/profile";
+    },
+    isSettingsRoute() {
+      return this.$route.path === "/profile/settings";
+    },
   },
     created() {
       
@@ -247,6 +256,10 @@ export default {
             this.visible = false;
             this.$router.push("/auth");
         },
+        redirectToProfile() {
+          this.visible = false;
+          this.$router.push("/profile");
+        },
         open() {
           this.checkToken();
         if (this.checkerToken) {
@@ -255,6 +268,10 @@ export default {
         }
             this.visible = true;
         },
+        redirectToFavorites() {
+          this.visible = false;
+          this.$router.push("/favorites");
+        }
     },
    
 };
