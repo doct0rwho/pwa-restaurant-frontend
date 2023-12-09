@@ -143,6 +143,11 @@ router.push('/');
 
     }).catch((error) => {
       console.log(error)
+      if(error.response.status === 401){
+          toast.error('Email already using on this platform');
+         }else{
+          toast.error('Something went wrong. Please try again.');
+         }
     })
   }).catch((error) => {
     console.log("Handle the error", error)
