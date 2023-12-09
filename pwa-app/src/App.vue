@@ -6,10 +6,10 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="user">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute && !isStaffRoute && !isStaffProfileRoute && !isStaffSettingsRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="search">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute && !isStaffRoute && !isStaffProfileRoute && !isStaffSettingsRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -30,14 +30,24 @@
             <div class="status-label">
                Статус: {{ role }}
             </div>
-            <div>
+            <div v-if="!staff">
               <Button class="personal-cabinet" @click="redirectToProfile">
                 Перейти в особистий кабінет
               </Button>
             </div>
-            <div>
+            <div v-else>
+              <Button class="personal-cabinet" @click="redirectToStaffProfile">
+                Перейти в особистий кабінет
+              </Button>
+            </div>
+            <div v-if="!staff">
               <Button class="chosen" @click="redirectToFavorites">
                 Улюблені страви
+              </Button>
+            </div>
+            <div v-else>
+              <Button class="chosen" @click="redirectToStaffWorkPlace">
+                Робоче місце
               </Button>
             </div>
            
@@ -80,10 +90,10 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="user">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute && !isStaffRoute && !isStaffProfileRoute && !isStaffSettingsRoute" class="user">
           <i class="pi pi-search"></i>
         </Button>
-        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute" class="search">
+        <Button v-if="!isAuthRoute && !isMenuRoute && !isFavoritesRoute && !isProfileRoute && !isSettingsRoute && !isStaffRoute && !isStaffProfileRoute && !isStaffSettingsRoute" class="search">
           <i class="pi pi-user"></i>
         </Button>
         <div class="card flex justify-content-center">
@@ -102,7 +112,7 @@
               додаткових функцій та спростить процес замовлення та оплати
             </div>
             <div style="margin-top: 10px">
-              <Button class="staff-auth-button">
+              <Button class="staff-auth-button" @click="redirectToStaffAuthPage">
                 Авторизуватися як робітник
               </Button>
             </div>
@@ -175,7 +185,8 @@ export default {
             checkerToken: false,
             email: null,
             userName: null,          
-            role: null
+            role: null,
+            staff: false,
         };
     },
     
@@ -196,6 +207,15 @@ export default {
     isSettingsRoute() {
       return this.$route.path === "/profile/settings";
     },
+    isStaffRoute() {
+      return this.$route.path === "/staff";
+    },
+    isStaffProfileRoute() {
+      return this.$route.path === "/staff/profile";
+    },
+    isStaffSettingsRoute() {
+      return this.$route.path === "/staff/profile/settings";
+    },
   },
     created() {
       
@@ -209,22 +229,37 @@ export default {
     methods: {
       getUser() {
         const email = localStorage.getItem("email");
-        
-
-     
-        axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
+        const role = localStorage.getItem("role");
+        if(role == "client"){
+          axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
           response.data;
           console.log(response.data.data[0].userName);
           this.userName = response.data.data[0].userName
           if(response.data.data[0].role == "user"){
             this.role = "Клієнт";
           }
+          this.staff = false;
+        })
+        .catch((error) => {
+          console.log(error);          
+       
+        });
+        }else{
+          axios.get(`https://diploma-lya6.onrender.com/get/worker/data/${email}`).then((response) => {
+          response.data;          
+          this.userName = response.data.data[0].workerFirstName + " " + response.data.data[0].workerLastName;
+          
+            this.role = "Робітник"+" "+`(${response.data.data[0].role})`
+            this.staff = true;
         
         })
         .catch((error) => {
           console.log(error);          
        
         });
+        }
+     
+        
         
         
     },
@@ -256,9 +291,17 @@ export default {
             this.visible = false;
             this.$router.push("/auth");
         },
+        redirectToStaffProfile() {
+          this.visible = false;
+          this.$router.push("/staff/profile");
+        },
         redirectToProfile() {
           this.visible = false;
           this.$router.push("/profile");
+        },
+        redirectToStaffAuthPage() {
+            this.visible = false;
+            this.$router.push("/staff");
         },
         open() {
           this.checkToken();

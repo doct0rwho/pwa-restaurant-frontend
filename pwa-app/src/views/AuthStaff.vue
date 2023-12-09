@@ -5,7 +5,7 @@
                 <i class="pi pi-chevron-left"></i>
             </Button>
             <div class="header-text">
-            Авторизація клієнта
+            Авторизація робітника
             </div>  
         </div> 
         <div class="body">
@@ -24,15 +24,7 @@
             <div >
                 <div class="google-component" v-if="login">
                     <!-- <GoogleLogin class="google"  :callback="callback" style="color: "/> -->
-                    <Button class="google" @click="loginer">
-  <img src="/img/icons/icons8-google-48.png" alt="Google Icon" width="24" height="24">
-  <div class="google-button-text">
-    Увійти за допомогою Google
-  </div>
-</Button>
-<!-- <div class="divider-line-left"></div> -->
-<div class="label-email">Увійдіть за допомогою електронної пошти</div>
-<!-- <div class="divider-line-right"></div> -->
+              
 <div class="log-input-email">
     <InputText class="register-input" v-model="email" placeholder="Email"   />
 </div>   
@@ -48,19 +40,13 @@
             </div>
                 </div>
                 <div class="google-component" v-if="register">
-                      <!-- <GoogleLogin class="google"  :callback="callback" style="color: "/> -->
-                      <Button class="google" @click="loginer">
-  <img src="/img/icons/icons8-google-48.png" alt="Google Icon" width="24" height="24">
-  <div class="google-button-text-reg">
-    Зареєструватися через Google
-  </div>
-</Button>
-<!-- <div class="divider-line-left"></div> -->
-<div class="label-email-register">Зареєструватися звичайним шляхом</div>
-<!-- <div class="divider-line-right"></div> -->
+                      
 <div class="reg-input-userName">
-    <InputText class="register-input" v-model="userName" placeholder="User name"   />
+    <InputText class="register-input" v-model="userName" placeholder="First name"   />
 </div>  
+<div class="reg-input-userName2">
+    <InputText class="register-input" v-model="userName2" placeholder="Second name"   />
+</div>
 <div class="reg-input-email">
     <InputText class="register-input" v-model="email" placeholder="Email"   />
 </div>   
@@ -84,7 +70,6 @@
     </div>
 </template>
 <script setup>
-import { googleTokenLogin } from "vue3-google-login"
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { ref } from 'vue';
@@ -94,6 +79,7 @@ import 'vue3-toastify/dist/index.css';
 const login = ref(true);
 const register = ref(false);
 const userName = ref('');
+const userName2 = ref('');
 const email = ref('');
 const password = ref('');
 const confirm = ref('');
@@ -122,34 +108,9 @@ const toRegisterForm = () => {
   confirm.value = '';
 };
 
-const loginer = () => {  
-    console.log("loginer")
-  googleTokenLogin().then((response) => {
-    console.log("Handle the response", response.access_token)
-    axios.post('https://diploma-lya6.onrender.com/google/registration', {
-      token: response.access_token
-    }).then((response) => {
-      console.log(response)
-      const store = localStorage;
 
-    // Store token and email in local storage
-    store.setItem('token', response.data.token);
-    store.setItem('email', response.data.email); 
-    store.setItem('role', 'client')     
-  
-
-// After the page is reloaded, navigate to the home page
-router.push('/');
-
-    }).catch((error) => {
-      console.log(error)
-    })
-  }).catch((error) => {
-    console.log("Handle the error", error)
-  })
-}
 const registerClient = () => {  
-      if (!userName.value || !email.value || !password.value || !confirm.value) {
+      if (!userName.value || !email.value || !password.value || !confirm.value || !userName2.value) {
         toast.error('Please fill in all fields.');
         return;
       }
@@ -157,8 +118,9 @@ const registerClient = () => {
         toast.error('Passwords do not match.');
         return;
       }
-      axios.post('https://diploma-lya6.onrender.com/selfRegistrationUser', {
-        userName: userName.value,
+      axios.post('https://diploma-lya6.onrender.com/selfRegistrationWorker', {
+        workerFirstName: userName.value,
+        workerLastName: userName2.value,
         email: email.value,
         password: password.value,
         duplicatePassword: confirm.value,
@@ -169,7 +131,7 @@ const registerClient = () => {
         // Store token and email in local storage
         store.setItem('token', response.data.token);
         store.setItem('email', email.value);
-        store.setItem('role', 'client')
+        store.setItem('role', 'staff')
         
         router.push('/');
       }).catch((error) => {
@@ -185,7 +147,7 @@ const registerClient = () => {
         toast.error('Please fill in all fields.');
         return;
       }     
-      axios.post('https://diploma-lya6.onrender.com/login/with/password/user', {
+      axios.post('https://diploma-lya6.onrender.com/login/with/password/worker', {
         email: email.value,
         password: password.value,        
       }).then((response) => {
@@ -195,7 +157,7 @@ const registerClient = () => {
         // Store token and email in local storage
         store.setItem('token', response.data.token);
         store.setItem('email', email.value);
-        store.setItem('role', 'client')
+        store.setItem('role', 'staff')
         
         router.push('/');
       }).catch((error) => {
@@ -206,7 +168,7 @@ const registerClient = () => {
         }else if(error.response.status === 402){
           toast.error('Wrong password');
         }else if(error.response.status === 403){
-          toast.error('This email registered with Google. Please login with Google');
+          toast.error('Something went wrong. Please try again.');
         }else{
           toast.error('Something went wrong. Please try again.');
         }
@@ -393,7 +355,7 @@ const registerClient = () => {
 }
 .reg-input-email{
   position: absolute;
-  top: 270px;
+  top: 220px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -407,7 +369,7 @@ const registerClient = () => {
 }
 .reg-input-password{
   position: absolute;
-  top: 320px;
+  top: 270px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -421,7 +383,7 @@ const registerClient = () => {
 }
 .reg-input-password-repeat{
     position: absolute;
-  top: 370px;
+  top: 320px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -435,7 +397,20 @@ const registerClient = () => {
 }
 .reg-input-userName{
   position: absolute;
-  top: 220px;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.reg-input-userName2{
+  position: absolute;
+  top: 170px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -461,7 +436,7 @@ const registerClient = () => {
 }
 .regclient-button{
     position: absolute;
-    top: 430px;
+    top: 380px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
@@ -484,7 +459,7 @@ const registerClient = () => {
 }
 .log-input-email{
   position: absolute;
-  top: 220px;
+  top: 120px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -497,7 +472,7 @@ const registerClient = () => {
 }
 .log-input-password{
   position: absolute;
-  top: 270px;
+  top: 170px;
   left: 50%;
   transform: translateX(-50%);
   width: 300px;
@@ -510,7 +485,7 @@ const registerClient = () => {
 }
 .logclient-button{
     position: absolute;
-    top: 330px;
+    top: 230px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;

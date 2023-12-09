@@ -5,6 +5,9 @@ import Menu from "@/views/Menu.vue";
 import Favorites from "@/views/Favorites.vue";
 import Profile from "@/views/Profile.vue";
 import Settings from "@/views/Profile/Settings.vue";
+import Staff from "@/views/AuthStaff.vue";
+import StaffProfile from "@/views/StaffProfile.vue";
+import StaffSettings from "@/views/Profile/StaffSettings.vue";
 
 
 
@@ -43,13 +46,28 @@ const routes = [
     name: "Settings",
     component: Settings,
 
+  },
+  {
+    path: "/staff",
+    name: "Staff",
+    component: Staff,
+  },
+  {
+    path: "/staff/profile",
+    name: "StaffProfile",
+    component: StaffProfile,
+  },
+  {
+    path: "/staff/profile/settings",
+    name: "StaffSettings",
+    component: StaffSettings,
   }
   
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes,
+  routes, 
 });
 
 export default router;

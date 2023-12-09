@@ -4,21 +4,12 @@
       <Button class="back-button" @click="redirectToHomePage">
         <i class="pi pi-chevron-left"></i>
       </Button>
-      <div class="header-text">Особистий профіль</div>
+      <div class="header-text">Особистий профіль робітника</div>
     </div>
     <div class="chosen-text">{{ userName }}</div>
-    <div>
-              <Button class="history-button" @click="redirectToHistory">
-                <div class="history-button-text">
-                  Історія замовлень
-                </div>
-                <div class="history-button-text-symbol">
-                  <i class="pi pi-chevron-right"></i>
-                </div>
-              </Button>
-            </div>
+
             <div>
-              <Button class="settings-button" @click="redirectToSettings">
+              <Button class="settings-button" @click="redirectToStaffSettings">
                 <div class="settings-button-text">
                   Налаштуваня профілю
                 </div>
@@ -55,11 +46,9 @@ onMounted(() => {
 const redirectToHomePage = () => {
   router.push("/");
 };
-const redirectToHistory = () => {
-  router.push("/history");
-};
-const redirectToSettings = () => {
-  router.push("/profile/settings");
+
+const redirectToStaffSettings = () => {
+  router.push("/staff/profile/settings");
 };
 const checkToken = () => {
     if (localStorage.getItem("token") != null) {
@@ -72,10 +61,10 @@ const checkToken = () => {
 };
 const getUser = () =>{
     const email = localStorage.getItem("email");
-        axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
+        axios.get(`https://diploma-lya6.onrender.com/get/worker/data/${email}`).then((response) => {
           response.data;
-          console.log(response.data.data[0].userName);
-          var user = response.data.data[0].userName;            
+          console.log(response.data.data[0].workerFirstNamee);
+          var user = response.data.data[0].workerFirstName + ' ' + response.data.data[0].workerLastName;           
             if(user.length > 28 ){
                 user = user.slice(0, 28) + '...';
                 userName.value = user;
@@ -159,29 +148,7 @@ const logout = () => {
   color: #000000;
   font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
-.history-button{
-    position: absolute;
-    top: 130px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 40px;
-    background-color: #f9f6a5;
-    border: none;
-    border-radius: 50px;
-    padding: 10px 40px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #000000;
-    font-family: "Neucha";
-}
-.history-button:focus {
-    outline: none; /* Optional: Remove focus outline */
-    box-shadow: none;
-}
-.history-button-text{
-    margin-left: 40px;
-}
+
 .history-button-text-symbol{
     position: absolute;
     top: 10px;
@@ -189,7 +156,7 @@ const logout = () => {
 }
 .settings-button{
     position: absolute;
-    top: 200px;
+    top: 130px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;
@@ -212,7 +179,7 @@ const logout = () => {
 }
 .quit-button{
     position: absolute;
-    top: 270px;
+    top: 200px;
     left: 50%;
     transform: translateX(-50%);
     width: 300px;

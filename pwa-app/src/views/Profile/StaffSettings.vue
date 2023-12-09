@@ -1,17 +1,20 @@
 <template>
     <div>
         <div class="header">
-      <Button class="back-button" @click="redirectToProfile">
+      <Button class="back-button" @click="redirectToStaffProfile">
         <i class="pi pi-chevron-left"></i>
       </Button>
-      <div class="header-text">Особистий профіль</div>
+      <div class="header-text">Особистий профіль робітника</div>
     </div>
     <div class="chosen-text">Редагування даних</div>
     <div class="log-input-email">
-    <InputText class="register-input" v-model="userEmail" placeholder="Email"  :disabled="google"  />
+    <InputText class="register-input" v-model="userEmail" placeholder="Email"  disabled="true" />
 </div>   
 <div class="log-input-password">
-    <InputText class="register-input" v-model="userName" placeholder="Name"  />
+    <InputText class="register-input" v-model="userFirstName" placeholder="First Name"  />
+</div>
+<div class="log-input-lastname">
+    <InputText class="register-input" v-model="userLastName" placeholder="Last Name"  />
 </div>
 <div>
               <Button class="logclient-button" @click="editClient">
@@ -31,9 +34,10 @@ import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 const router = useRouter();
 const token = ref("");
-const userName = ref("");
+const userFirstName = ref("");
+const userLastName = ref("");
 const userEmail = ref("");
-const google = ref(false);
+
 
 onMounted(() => {
   checkToken();
@@ -49,12 +53,13 @@ const checkToken = () => {
 };
 const getUser = () =>{
     const email = localStorage.getItem("email");
-        axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
+        axios.get(`https://diploma-lya6.onrender.com/get/worker/data/${email}`).then((response) => {
           response.data;
-          console.log(response.data.data[0].userName);
-          userName.value = response.data.data[0].userName; 
+          console.log(response.data.data[0].workerFirstName);
+          userFirstName.value = response.data.data[0].workerFirstName; 
+          userLastName.value = response.data.data[0].workerLastName;
           userEmail.value = response.data.data[0].email;
-          google.value = response.data.data[0].googleStatus;
+          
 
            
         
@@ -67,15 +72,14 @@ const getUser = () =>{
 }
 const editClient = () => {
     const email = localStorage.getItem("email");
-    console.log(userEmail.value)
-    console.log(userName.value)
     const data = {
         email: email,
         newemail: userEmail.value,
-        name: userName.value,       
+        firstName: userFirstName.value,
+        lastName: userLastName.value,      
     };
     axios
-        .post("https://diploma-lya6.onrender.com/edit/user/data", data)
+        .post("https://diploma-lya6.onrender.com/edit/worker/data", data)
         .then((response) => {
         console.log(response);
         if (response.data.status === "success") {
@@ -95,8 +99,8 @@ const editClient = () => {
         console.log(error);
         });
 };
-const redirectToProfile = () => {
-  router.push("/profile");
+const redirectToStaffProfile = () => {
+  router.push("/staff/profile");
 };
 </script>
 <style scoped>
@@ -202,7 +206,7 @@ const redirectToProfile = () => {
 }
 .logclient-button{
     position: absolute;
-    top: 240px;
+    top: 285px;
     left: 50%;
     transform: translateX(-50%);
     width: 150px;
@@ -223,4 +227,18 @@ const redirectToProfile = () => {
 .regclient-button-text{
     margin-left: 0px;
 }
+.log-input-lastname{
+  position: absolute;
+  top: 230px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 40px;
+  background-color: white;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+
 </style>

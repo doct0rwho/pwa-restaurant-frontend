@@ -168,13 +168,20 @@ const checkerToken = () => {
   if (localStorage.getItem("token") === null) {
     token.value = false;
   } else {
-    token.value = true;
-    const email = localStorage.getItem("email");
+    if(localStorage.getItem("role") === 'staff'){
+      token.value = false;
+    }
+    else{
+      const email = localStorage.getItem("email");
     axios.get(`https://diploma-lya6.onrender.com/get/user/data/${email}`).then((response) => {
       console.log('response data', response.data.data[0].favorites);
       favorites.value = response.data.data[0].favorites;
+      token.value = true;
       console.log(favorites.value);
     } )
+    }
+    
+   
   }
 };
 </script>
