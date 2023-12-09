@@ -69,6 +69,7 @@ const editClient = () => {
     const email = localStorage.getItem("email");
     const data = {
         email: email,
+        newemail: userEmail.value,
         user: userName.value,       
     };
     axios
@@ -76,12 +77,19 @@ const editClient = () => {
         .then((response) => {
         console.log(response);
         if (response.data.status === "success") {
-            toast.success('Дані успішно змінено');            
+            toast.success('Дані успішно змінено');  
+            localStorage
         } else {
             toast.error('Помилка');
         }
         })
         .catch((error) => {
+          if(error.response.status === 402){
+            toast.error('Користувач з таким email вже існує');
+          }
+          else{
+            toast.error('Помилка');
+          }
         console.log(error);
         });
 };
