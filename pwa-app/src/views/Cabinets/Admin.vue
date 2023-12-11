@@ -79,7 +79,7 @@ const dialog = ref(false);
 const dialogUserName = ref("");
 const dialogUserEmail = ref("");
 const selectedRole = ref(null);
-const roles = [{ name: "Адмін" }, { name: "Офіціант" }, { name: "Кухар" }];
+const roles = [{ name: "Адмін" }, { name: "Офіціант" }, { name: "Кухар" }, { name: "Шеф-кухар" }];
 const router = useRouter();
 onMounted(() => {
   getDemoUsers();
@@ -96,6 +96,8 @@ const acceptUserToRestuarant = () => {
     temp = "waiter";
   } else if (selectedRole.value.name == "Кухар") {
     temp = "cook";
+  } else if (selectedRole.value.name == "Шеф-кухар"){
+    temp = "chef"; 
   } else {
     toast.error("Виберіть роль");
     return;

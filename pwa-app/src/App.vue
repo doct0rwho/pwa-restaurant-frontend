@@ -20,7 +20,8 @@
             !isWorkerAdminRoute &&
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
-            !isEditMenuRoute
+            !isEditMenuRoute  &&
+            !isWorkerChefRoute
           "
           class="user"
         >
@@ -40,7 +41,8 @@
             !isWorkerAdminRoute &&
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
-            !isEditMenuRoute
+            !isEditMenuRoute &&
+            !isWorkerChefRoute
           "
           class="search"
         >
@@ -152,7 +154,8 @@
             !isWorkerAdminRoute &&
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
-            !isEditMenuRoute
+            !isEditMenuRoute  &&
+            !isWorkerChefRoute
           "
           class="user"
         >
@@ -172,7 +175,8 @@
             !isWorkerAdminRoute &&
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
-            !isEditMenuRoute
+            !isEditMenuRoute  &&
+            !isWorkerChefRoute
           "
           class="search"
         >
@@ -320,6 +324,9 @@ export default {
     isEditMenuRoute() {
       return this.$route.path === "/workerSpace/editMenu";
     },
+    isWorkerChefRoute() {
+      return this.$route.path === "/workerSpace/chef";
+    },
   },
   created() {
     this.checkDevice();
@@ -417,6 +424,8 @@ export default {
         this.$router.push("/workerSpace/waiter");
       } else if (this.worker == "demo") {
         this.$router.push("/workerSpace/demo");
+      } else if (this.worker == "chef") {
+        this.$router.push("/workerSpace/chef");
       }
     },
     open() {

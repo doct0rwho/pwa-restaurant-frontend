@@ -13,6 +13,7 @@ import Cook from "@/views/Cabinets/Cook.vue";
 import Waiter from "@/views/Cabinets/Waiter.vue";
 import Demo from "@/views/Cabinets/Demo.vue";
 import EditMenu from "@/views/Cabinets/EditMenu.vue";
+import Chef from "@/views/Cabinets/Chef.vue";
 
 
 const routes = [
@@ -90,6 +91,11 @@ const routes = [
     path: "/workerSpace/editMenu",
     name: "EditMenu",
     component: EditMenu,
+  },
+  {
+    path: "/workerSpace/chef",
+    name: "Chef",
+    component: Chef,
   },
 ];
 

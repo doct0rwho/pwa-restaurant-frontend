@@ -6,14 +6,30 @@
       </Button>
       <div class="header-text">Редагування меню</div>
     </div>
+    <div>
+      <Button class="add-category" @click="addCategory">
+        <i class="pi pi-plus"></i>
+      </Button>
+    </div>   
+    <div>
+
+    </div>
       <div class="table">
         <div v-for="category in sortedData" :key="category.categoryName">
-          <Button
+          
+          <div class="category">{{ category.categoryName }}
+            <Button
               class="edit-category"
-              @click="openDialogForCategoryEdit">
+              @click="openDialogForCategoryEdit(category.categoryId, category.categoryName)">
               <i class="pi pi-pencil"></i>
             </Button>
-          <div class="category">{{ category.categoryName }}</div>
+            <Button class="delete-category" @click="deleteCategory(category.categoryId)">
+              <i class="pi pi-trash"></i>
+            </Button>
+            <Button class="add-menu-item" @click="add(category.categoryName)">
+              <i class="pi pi-plus"></i>
+            </Button>
+           </div>
           <div class="divider-line1"></div>
           <div v-for="item in category.items" :key="item.name">
             <div class="container">
@@ -46,6 +62,9 @@
               "
             >
               Edit
+            </Button>
+            <Button class="delete-menu-item" @click="deleteMenuItem(item.id)">
+              Delete
             </Button>
                 </div>
               </div>
@@ -91,6 +110,91 @@
         </Button>
       </div>
     </Dialog>
+    <Dialog
+      v-model:visible="dialogCategory"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    <div >
+    <div class="category-name">Назва</div>
+    <InputText class="edit-category2" v-model="categoryName"  />
+</div>   
+<div>
+        <Button class="decline2" @click="declineCategory"> Decline </Button>
+        <Button class="accept2" @click="acceptNewCategoryName">
+          Accept
+        </Button>
+      </div>
+    </Dialog>
+    <Dialog
+      v-model:visible="dialogAddCategory"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    <div >
+    <div class="category-name">Назва</div>
+    <InputText class="edit-category2" v-model="categoryName"  />
+</div>   
+<div>
+        <Button class="decline2" @click="declineAddCategory"> Decline </Button>
+        <Button class="accept2" @click="addCategoryFunction">
+          Accept
+        </Button>
+      </div>
+    </Dialog>
+    <Dialog
+      v-model:visible="dialogAddMenuitem"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    <div >
+    <div class="input-name">Назва</div>
+    <InputText class="edit-name" v-model="itemName"  />
+</div>   
+<div>
+    <div class="input-price">Ціна</div>
+    <InputText class="edit-price" v-model="itemPrice"   /> UAH
+</div>
+<div > 
+    <div class="input-description">Опис</div>   
+    <Textarea class="desc-input" v-model="itemDesc" autoResize rows="5" cols="30" />
+</div>   
+<div >
+    <div class="input-weight">Вага</div>
+    <InputText class="weight-input" v-model="itemWeight"   /> г
+</div>
+     
+      <div>
+        <Button class="decline2" @click="declineAddMenuitem"> Decline </Button>
+        <Button class="accept2" @click="addNewMenuItem">
+          Accept
+        </Button>
+      </div>
+    </Dialog>
     
   </div>
 </template>
@@ -109,11 +213,16 @@ const sortedData = ref([]);
 const token = ref("");
 const favorites = ref([]);
 const dialog = ref(false);
+const dialogCategory = ref(false);
+const dialogAddCategory = ref(false);
+const dialogAddMenuitem = ref(false);
 const itemName = ref("");
 const itemPrice = ref("");
 const itemDesc = ref("");
 const itemWeight = ref("");
 const itemId = ref("");
+const categoryName = ref("");
+const categoryId = ref("");
 
 
 
@@ -168,6 +277,7 @@ const OpenDialog = (name, weight, price, description, id) => {
   
   
 };
+
 const decline = () => {  
   itemDesc.value = "";
   itemName.value = "";
@@ -175,6 +285,18 @@ const decline = () => {
   itemWeight.value = "";
   itemId.value = "";
   dialog.value = false;
+};
+const declineCategory = () => {  
+  categoryName.value = "";
+  dialogCategory.value = false;
+};
+const declineAddCategory = () => {  
+  categoryName.value = "";
+  dialogAddCategory.value = false;
+};
+const declineAddMenuitem = () => {  
+  categoryName.value = "";
+  dialogAddMenuitem.value = false;
 };
 const acceptEdittedData = () => {
   const data = {
@@ -209,6 +331,160 @@ const acceptEdittedData = () => {
       }
     });
 };
+const openDialogForCategoryEdit = (id,name) => {
+  dialogCategory.value = true;
+  categoryName.value = name;
+  categoryId.value = id;
+  console.log(id, name)
+}
+const acceptNewCategoryName = () => {
+  const data = {
+    name: categoryName.value,
+    categoryId: categoryId.value,
+    email: localStorage.getItem("email"),
+  };
+  console.log(data);
+  axios
+    .post("https://diploma-lya6.onrender.com/editCategory", data)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === "success") {       
+        dialogCategory.value = false;
+        categoryName.value = "";
+        categoryId.value = "";
+        toast.success("Дані успішно змінено");
+        getMenu();
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 402) {
+        toast.error("Користувач з таким email вже існує");
+      } else {
+        console.log(error);
+        toast.error("Помилка");
+      }
+    });
+
+}
+const addCategory = () => {
+  dialogAddCategory.value = true;
+}
+const addCategoryFunction = () => {
+  const data = {
+    categoryName: categoryName.value,
+    email: localStorage.getItem("email"),
+  };
+  console.log(data);
+  axios
+    .post("https://diploma-lya6.onrender.com/addCategory", data)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === "success") {       
+        dialogAddCategory.value = false;
+        categoryName.value = "";
+        toast.success("Дані успішно змінено");
+        getMenu();
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 402) {
+        toast.error("Користувач з таким email вже існує");
+      } else {
+        console.log(error);
+        toast.error("Помилка");
+      }
+    });
+
+}
+const deleteCategory = (id) => {
+  const data = {
+    categoryId: id,
+    email: localStorage.getItem("email"),
+  };
+  console.log(data);
+  axios
+    .post("https://diploma-lya6.onrender.com/deleteCategoryAndItems", data)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === "success") {       
+        toast.success("Дані успішно змінено");
+        getMenu();
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 402) {
+        toast.error("Користувач з таким email вже існує");
+      } else {
+        console.log(error);
+        toast.error("Помилка");
+      }
+    });
+
+}
+const add = (name) => {
+  dialogAddMenuitem.value = true;
+  categoryName.value = name;
+  console.log(name)
+}
+const addNewMenuItem = () => {
+  const data = {
+    name: itemName.value,
+    price: itemPrice.value,
+    description: itemDesc.value,
+    weight: itemWeight.value,
+    categoryName: categoryName.value,
+    email: localStorage.getItem("email"),
+  };
+  console.log(data);
+  axios
+    .post("https://diploma-lya6.onrender.com/addMenuItem", data)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === "success") {       
+        dialogAddMenuitem.value = false;
+        itemDesc.value = "";
+        itemName.value = "";
+        itemPrice.value = "";
+        itemWeight.value = "";
+        toast.success("Дані успішно змінено");
+        getMenu();
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 402) {
+        toast.error("Користувач з таким email вже існує");
+      } else {
+        console.log(error);
+        toast.error("Помилка");
+      }
+    });
+
+}
+const deleteMenuItem = (id) => {
+  const data = {
+    itemId: id,
+    email: localStorage.getItem("email"),
+  };
+  console.log(data);
+  axios
+    .post("https://diploma-lya6.onrender.com/deleteMenuItem", data)
+    .then((response) => {
+      console.log(response);
+      if (response.data.status === "success") {       
+        toast.success("Дані успішно змінено");
+        getMenu();
+      }
+    })
+    .catch((error) => {
+      if (error.response.status === 402) {
+        toast.error("Користувач з таким email вже існує");
+      } else {
+        console.log(error);
+        toast.error("Помилка");
+      }
+    });
+
+}
 </script>
 <style scoped>
 body {
@@ -357,8 +633,8 @@ body {
 
   width: 100px;
   border-radius: 50px;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  left: 10%;
+  transform: translate(0, -50%);
   margin-top: 10px;
   padding: 10px 40px;
   font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
@@ -503,7 +779,7 @@ body {
   position: absolute;
   width: 50px;
   border-radius: 50px;
- margin-left: 70px;
+ margin-left: 0px;
   margin-top: 0px;
  
   font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
@@ -511,5 +787,83 @@ body {
 .edit-category:focus {
   outline: none;
   box-shadow: none;
+}
+
+.category-name {
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.edit-category2{
+  border: none;
+  background: white;
+    border-radius: 50px;
+  padding: 10px 10px;
+  width: 250px;
+  color: #000000;
+  font-size: small;
+}
+.delete-category{
+  background: transparent;
+  border: none;
+  color: red;
+  position: absolute;
+  width: 50px;
+  border-radius: 50px;
+ margin-left: 80px;
+  margin-top: 0px;
+ 
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.delete-category:focus {
+  outline: none;
+  box-shadow: none;
+}
+.add-menu-item{
+  background: transparent;
+  border: none;
+  color: black;
+  position: absolute;
+  width: 50px;
+  border-radius: 50px;
+ margin-left: 40px;
+  margin-top: 0px;
+ 
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.add-menu-item:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+
+.add-category {
+  background: none;
+  border: none;
+  color: black;
+  position: fixed;
+  top: 5px;
+  right: 50px;
+  z-index: 2;
+}
+.add-category:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.delete-menu-item{
+  background: #f9f6a5;
+  border: none;
+  color: black;
+  position: absolute;
+
+  width: 100px;
+  border-radius: 50px;
+  right: 10%;
+  transform: translate(0, -50%);
+  margin-top: 10px;
+  padding: 10px 35px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
 </style>

@@ -28,7 +28,7 @@
               <div class="item-description">
                 {{ item.description }}
               </div>
-              <div class="item-weight" v-if="!token" style="margin-bottom: 20px;">Вага: {{ item.weight }} г</div>
+              <div class="item-weight" style="margin-bottom: 20px;">Вага: {{ item.weight }} г</div>
               <div v-if="token" class="item-buttons" >
                 <div v-if="chosen(item.name)">
                     <Button class="add-to-favorites" @click="removeFromFavorites(item)">
@@ -110,6 +110,7 @@ onMounted(async () => {
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
+
   
 });
 
