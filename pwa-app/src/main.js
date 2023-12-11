@@ -11,8 +11,10 @@ import Menu from 'primevue/menu';
 import VueSidebarMenu from 'vue-sidebar-menu'
 import vue3GoogleLogin from 'vue3-google-login'
 import InputText from 'primevue/inputtext';
-
+import Dialog from 'primevue/dialog';
 import Sidebar from 'primevue/sidebar';
+import Dropdown from 'primevue/dropdown';
+import Textarea from 'primevue/textarea';
 
 import 'vue-sidebar-menu/dist/vue-sidebar-menu.css'
 
@@ -27,6 +29,8 @@ app.use(VueSidebarMenu);
 app.component('Button', Button);
 app.component('InputText', InputText);
 app.component('Menu', Menu);
-
+app.component('Dialog', Dialog);
+app.component('Dropdown', Dropdown);
 app.component('Sidebar', Sidebar);
+app.component('Textarea', Textarea);
 app.mount('#app');

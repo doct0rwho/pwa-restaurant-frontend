@@ -4,3 +4,42 @@
 }/* }hide close button */
 /* src/assets/css/neucha.css */
 
+.p-dialog .p-dialog-content {
+     background: #f9f6a5;
+    /* color: #495057; */
+    border-radius: 50px;
+    padding: 0 1.5rem 2rem 1.5rem;
+    margin-top: 20px;
+    font-family: 'Neucha', 
+}
+
+.p-dialog .p-dialog-content :focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+.p-dropdown .p-dropdown-label {
+    background: transparent;    
+    border-radius: 50px;
+    font-family: 'Neucha', 
+    
+}
+.p-dropdown .p-dropdown-label :focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+.p-dropdown {
+    display: inline-flex;
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    border-radius: 50px;
+    margin-top: 10px;
+    font-family: 'Neucha', 
+
+}
+.p-dropdown :focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+
+

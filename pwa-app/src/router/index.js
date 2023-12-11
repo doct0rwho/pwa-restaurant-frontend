@@ -8,7 +8,11 @@ import Settings from "@/views/Profile/Settings.vue";
 import Staff from "@/views/AuthStaff.vue";
 import StaffProfile from "@/views/StaffProfile.vue";
 import StaffSettings from "@/views/Profile/StaffSettings.vue";
-
+import Admin from "@/views/Cabinets/Admin.vue";
+import Cook from "@/views/Cabinets/Cook.vue";
+import Waiter from "@/views/Cabinets/Waiter.vue";
+import Demo from "@/views/Cabinets/Demo.vue";
+import EditMenu from "@/views/Cabinets/EditMenu.vue";
 
 
 const routes = [
@@ -61,8 +65,32 @@ const routes = [
     path: "/staff/profile/settings",
     name: "StaffSettings",
     component: StaffSettings,
-  }
-  
+  },
+  {
+    path: "/workerSpace/admin",
+    name: "Admin",
+    component: Admin,
+  },
+  {
+    path: "/workerSpace/cook",
+    name: "Cook",
+    component: Cook,
+  },
+  {
+    path: "/workerSpace/waiter",
+    name: "Waiter",
+    component: Waiter,
+  },
+  {
+    path: "/workerSpace/demo",
+    name: "Demo",
+    component: Demo,
+  },
+  {
+    path: "/workerSpace/editMenu",
+    name: "EditMenu",
+    component: EditMenu,
+  },
 ];
 
 const router = createRouter({
