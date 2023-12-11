@@ -8,6 +8,11 @@
     </div>
       <div class="table">
         <div v-for="category in sortedData" :key="category.categoryName">
+          <Button
+              class="edit-category"
+              @click="openDialogForCategoryEdit">
+              <i class="pi pi-pencil"></i>
+            </Button>
           <div class="category">{{ category.categoryName }}</div>
           <div class="divider-line1"></div>
           <div v-for="item in category.items" :key="item.name">
@@ -490,5 +495,21 @@ body {
   margin-top: 10px;
   color: #000000;
   font-size: small;
+}
+.edit-category{
+  background: transparent;
+  border: none;
+  color: black;
+  position: absolute;
+  width: 50px;
+  border-radius: 50px;
+ margin-left: 70px;
+  margin-top: 0px;
+ 
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.edit-category:focus {
+  outline: none;
+  box-shadow: none;
 }
 </style>
