@@ -289,7 +289,7 @@ export default {
       return this.$route.path === "/auth";
     },
     isMenuRoute() {
-      return this.$route.path === "/menu";
+      return this.$route.path === "/menu/";
     },
     isFavoritesRoute() {
       return this.$route.path === "/favorites";
@@ -458,7 +458,7 @@ export default {
   /* position: absolute; */
   top: 5px;
   right: 0;
-  z-index: 2;
+  z-index: 3;
 }
 .user {
   background: none;

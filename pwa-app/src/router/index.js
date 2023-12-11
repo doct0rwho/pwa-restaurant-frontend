@@ -16,15 +16,16 @@ import EditMenu from "@/views/Cabinets/EditMenu.vue";
 import Chef from "@/views/Cabinets/Chef.vue";
 
 
+
 const routes = [
   {
     path: '/*',
     redirect: { name: Home }
-  },
+  },  
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home,    
   },
   {
     path: "/auth",
@@ -32,9 +33,9 @@ const routes = [
     component: About,
   },
   {
-    path: "/menu",
+    path: "/menu/:id?",
     name: "Menu",
-    component: Menu,
+    component: Menu,    
   },
   {
     path: "/favorites",
@@ -97,6 +98,7 @@ const routes = [
     name: "Chef",
     component: Chef,
   },
+ 
 ];
 
 const router = createRouter({

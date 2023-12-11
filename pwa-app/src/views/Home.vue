@@ -19,7 +19,8 @@
             <div class="feedback-text">
                 Надіслати відгук
             </div>
-        </Button>        
+        </Button>    
+         
     </div>
     <div class="divider-line-menu2"></div>
 </template>

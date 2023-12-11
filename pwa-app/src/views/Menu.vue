@@ -7,7 +7,7 @@
       <div class="header-text">Меню</div>
     </div>
     <div v-if="token" class="order">
-        <Button class="order-button" @click="redirectToOrder">
+        <Button class="order-button" @click="openOrder" :disabled="table === ''">
           <div class="order-button-text">
             Ваше замовлення
             <i class="pi pi-shopping-cart" ></i>
@@ -36,11 +36,19 @@
                     <i class="pi pi-star-fill" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
-                <Button class="add-to-cart" @click="addToCart(item)">
-                  <div class="add-to-cart-text">
-                    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
-                  </div>
-                </Button>  
+                
+                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === ''">
+  <div class="add-to-cart-text">
+    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
+  </div>
+</Button>
+<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === ''">
+  <div class="add-to-cart-text">
+    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
+  </div>
+</Button>
+
+
                 </div>
                 <div v-else>                 
                 <Button class="add-to-favorites" @click="addToFavorites(item.name)">
@@ -48,11 +56,18 @@
                     <i class="pi pi-star" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
-                <Button class="add-to-cart" @click="addToCart(item)">
-                  <div class="add-to-cart-text">
-                    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
-                  </div>
-                </Button>  
+                
+                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === ''">
+  <div class="add-to-cart-text">
+    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
+  </div>
+</Button>
+<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === ''">
+  <div class="add-to-cart-text">
+    <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
+  </div>
+</Button>
+
                 </div>
                             
               </div>
@@ -79,6 +94,67 @@
         </div>
       </div>
     </div>
+    <Dialog
+      v-model:visible="greetings"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    
+    <div class="greetings-text">{{ text }}</div>
+   
+      <Button class="close-dialog" @click="closeDialog">
+        Закрити
+      </Button>
+
+    </Dialog>
+    <Dialog
+      v-model:visible="Cart"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    
+    <div class="greetings-text">Ваше замовлення: {{ Summary }} UAH</div>
+    <div class="order-lsit">
+      <div v-for="item in OrderList" :key="item.name">
+       
+        
+            <div class="item-name2">
+              {{ item.name }}
+              <Button class="remove-from-cart" @click="removeFromCart(item)">
+              <i class="pi pi-times" style="font-size: 1.5rem;"></i>
+            </Button>
+
+            </div>
+            <div class="item-price">{{ item.price }} UAH</div>
+            
+ 
+
+        
+       
+      </div>      
+    </div>
+   
+      <Button class="close-dialog" @click="closeCart">
+        Закрити
+      </Button>
+
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -88,15 +164,38 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
-
-
+import io from 'socket.io-client';
+const socket = io("https://diploma-lya6.onrender.com/");
+socket.on('connect', () => {
+  console.log('connected');
+  offline.value = false;
+});
+socket.on('disconnect', () => {
+  console.log('disconnected');
+  offline.value = true;
+});
 const router = useRouter();
 //const data = ref({});
 const sortedData = ref([]);
 const token = ref("");
 const favorites = ref([]);
 
+const greetings = ref(true);
+const text = ref("");
+const table = ref("");
+const offline = ref(true);
+const busy = ref(false);
+const Cart = ref(false);
+const OrderList = ref([]);
+const Summary = ref('');
+
+
 onMounted(async () => {
+  try {
+    table.value = router.currentRoute.value.params.id
+  } catch (error) {
+    console.log(error);
+  }
   checkerToken();
   axios
     .get("https://diploma-lya6.onrender.com/getAllMenu")
@@ -110,10 +209,100 @@ onMounted(async () => {
     .catch((error) => {
       console.error("Error fetching data:", error);
     });
-
+    greetingsFunc();
   
 });
+const getChosen = () => {
+  socket.emit('getOrder', {
+    table: table.value,
+    email: localStorage.getItem("email"),
+  });
+  socket.on('order', (data) => {
+    console.log('data', data);
+    OrderList.value = data.orders;
+    Summary.value = data.summary;
+    console.log('Summary', Summary.value);
+    console.log('OrderList', OrderList.value);
+  });
+}
+const openOrder = () => {
+  Cart.value = true;
+  getChosen();
+}
 
+const addToCart = (item) => {
+  const email = localStorage.getItem("email");
+  const data = {
+    email: email,
+    foodId: item.id,
+    table: table.value,
+  };
+  console.log('data', data);
+  socket.emit('addFood', data);
+  OrderList.value.push({ name: item.name, price: item.price });
+  socket.on('foodAdded', () => {
+    
+  console.log('food added');
+  
+  });
+}
+const removeFromCart = (item) => {
+  const email = localStorage.getItem("email");
+  const data = {
+    email: email,
+    foodId: item.id,
+    table: table.value,
+  };
+  console.log('data', data);
+  socket.emit('removeFood', data);
+  const index = OrderList.value.findIndex((item) => item.name === item.name);
+  OrderList.value.splice(index, 1);
+  Summary.value = Summary.value - item.price;
+  socket.on('foodRemoved', () => {
+    
+  console.log('food removed');
+  
+  });
+}
+const greetingsFunc = () => {
+  // const email = localStorage.getItem("email");
+  if(!localStorage.getItem("token")){
+    text.value = "Ви не увійшли у свій аккаунт. Для того, щоб замовити щось, будь ласка, увійдіть у свій аккаунт";
+  }else{
+    if(table.value == ""){
+      text.value = "Ви не обрали столик. Для того, щоб замовити щось, будь ласка, оберіть столик та відскануйте QR-код за допомогою камери"; 
+    }else{
+      if(localStorage.getItem("role") === 'staff'){
+        text.value = "Ви увійшли у аккаунт персоналу. Для того, щоб замовити щось, будь ласка, увійдіть у аккаунт клієнта";
+      }else{        
+        socket.emit('join', {
+          table: table.value,
+          email: localStorage.getItem("email"),
+        });
+        socket.on('busy', () => {
+          busy.value = true;
+          text.value = "На жаль, цей столик вже зайнятий. Будь ласка, оберіть інший столик";
+        });  
+        socket.on('returnJoined', () => {
+          busy.value = false;  
+          greetings.value = false; 
+        });
+        socket.on('tableJoined', () => {
+          busy.value = false;     
+        text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
+        });
+
+      }
+    
+    }
+  }
+};
+const closeDialog = () => {
+  greetings.value = false;
+};
+const closeCart = () => {
+  Cart.value = false;
+};
 const addToFavorites = (name) => {
   const email = localStorage.getItem("email");
   const data = {
@@ -150,9 +339,18 @@ const removeFromFavorites = (name) => {
         });
     };
 
-
+const inCart = (name) => {
+  console.log('name', name);
+  const result = OrderList.value.find((item) => item.name === name);
+  if(result){
+    return true;
+  }
+  else{
+    return false;
+  }
+}
 const chosen = (name) =>{
-    console.log('name', name);
+    
     const result = favorites.value.find((item) => item.foodName === name);
     if(result){
         return true;
@@ -212,7 +410,7 @@ body {
   height: 45px;
   background-color: #dac2c2;
   font-size: 20px;
-  z-index: 1;
+  z-index: 2;
   font-weight: 500;
   color: #000000;
   box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
@@ -281,6 +479,16 @@ body {
   color: #000000;
   margin-left: 30px;
   margin-top: 25px;
+
+  font-family: "Neucha"; /*/* Use 'Neucha' font and fall back to cursive if not available */
+}
+.item-name2 {
+  /* Styles for the item name */
+  font-size: 18px;
+  font-weight: 500;
+  color: #000000;
+  margin-left: 30px;
+  
 
   font-family: "Neucha"; /*/* Use 'Neucha' font and fall back to cursive if not available */
 }
@@ -357,6 +565,22 @@ body {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
+.remove-to-cart {
+  position: relative;
+  top: 0;
+  left: 0; 
+  background-color: transparent;
+  border: none;
+  margin-left: -20px;
+  outline: none;  
+  font-weight: 500;
+  color: green;
+  font-size: 1.5rem;
+}
+.remove-to-cart:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
 .order{
     position: fixed;
     top: 60px;
@@ -396,6 +620,48 @@ body {
        
     color: #000000;
     font-family: "Neucha";
+}
+.greetings-text{
+    position: relative;
+    top: 0;
+    left: 0; 
+   
+    margin-left: 15px;
+    margin-top: 15px;
+    color: #000000;
+    font-size: 20px;
+    font-family: "Neucha";
+}
+.close-dialog{
+    background: white;
+  border: none;
+  color: black;  
+  width: 100px;
+  border-radius: 50px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin-top: 20px;
+  padding: 10px 30px;
+  font-family: "Neucha";
+    
+   
+    
+}
+.close-dialog:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
+}
+.remove-from-cart{
+    position: relative;
+    top: 15px;
+    left: 0; 
+    background-color: transparent;
+    border: none;
+    outline: none;
+    
+    font-weight: 500;
+    color: red;
+    font-size: 1.5rem;
 }
 
 </style>
