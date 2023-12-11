@@ -165,7 +165,7 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("https://diploma-lya6.onrender.com/");
+const socket = io("localhost:4000");
 socket.on('connect', () => {
   console.log('connected');
   offline.value = false;
@@ -282,11 +282,7 @@ const greetingsFunc = () => {
         socket.on('busy', () => {
           busy.value = true;
           text.value = "На жаль, цей столик вже зайнятий. Будь ласка, оберіть інший столик";
-        });  
-        socket.on('returnJoined', () => {
-          busy.value = false;  
-          greetings.value = false; 
-        });
+        });         
         socket.on('tableJoined', () => {
           busy.value = false;     
         text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
