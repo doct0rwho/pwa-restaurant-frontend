@@ -165,7 +165,7 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("localhost:4000");
+const socket = io("https://diploma-lya6.onrender.com");
 socket.on('connect', () => {
   console.log('connected');
   offline.value = false;
