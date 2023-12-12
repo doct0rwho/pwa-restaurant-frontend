@@ -180,7 +180,7 @@ const sortedData = ref([]);
 const token = ref("");
 const favorites = ref([]);
 
-const greetings = ref(true);
+const greetings = ref(false);
 const text = ref("");
 const table = ref("");
 const offline = ref(true);
@@ -268,12 +268,18 @@ const greetingsFunc = () => {
   // const email = localStorage.getItem("email");
   if(!localStorage.getItem("token")){
     text.value = "Ви не увійшли у свій аккаунт. Для того, щоб замовити щось, будь ласка, увійдіть у свій аккаунт";
+    greetings.value = true;
+    console.log('не увішов');
   }else{
     if(table.value == ""){
       text.value = "Ви не обрали столик. Для того, щоб замовити щось, будь ласка, оберіть столик та відскануйте QR-код за допомогою камери"; 
+      greetings.value = true;
+      console.log('не обрав столик');
     }else{
       if(localStorage.getItem("role") === 'staff'){
         text.value = "Ви увійшли у аккаунт персоналу. Для того, щоб замовити щось, будь ласка, увійдіть у аккаунт клієнта";
+        greetings.value = true;
+        console.log('персонал');
       }else{        
         socket.emit('join', {
           table: table.value,
@@ -282,10 +288,14 @@ const greetingsFunc = () => {
         socket.on('busy', () => {
           busy.value = true;
           text.value = "На жаль, цей столик вже зайнятий. Будь ласка, оберіть інший столик";
+          greetings.value = true;
+          console.log('busy');
         });         
         socket.on('tableJoined', () => {
           busy.value = false;     
         text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
+        greetings.value = true;
+        console.log('tableJoined');
         });
 
       }
