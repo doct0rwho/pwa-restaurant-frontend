@@ -1,19 +1,19 @@
 import { createWebHistory, createRouter } from "vue-router";
-import Home from "@/views/Home.vue";
-import About from "@/views/Auth.vue";
-import Menu from "@/views/Menu.vue";
-import Favorites from "@/views/Favorites.vue";
-import Profile from "@/views/Profile.vue";
-import Settings from "@/views/Profile/Settings.vue";
-import Staff from "@/views/AuthStaff.vue";
-import StaffProfile from "@/views/StaffProfile.vue";
-import StaffSettings from "@/views/Profile/StaffSettings.vue";
-import Admin from "@/views/Cabinets/Admin.vue";
-import Cook from "@/views/Cabinets/Cook.vue";
-import Waiter from "@/views/Cabinets/Waiter.vue";
-import Demo from "@/views/Cabinets/Demo.vue";
-import EditMenu from "@/views/Cabinets/EditMenu.vue";
-import Chef from "@/views/Cabinets/Chef.vue";
+import Home from "@/components/homepage/Home.vue";
+import About from "@/components/authentication/Auth.vue";
+import Menu from "@/components/menu/Menu.vue";
+import Favorites from "@/components/favorites/Favorites.vue";
+import Profile from "@/components/profile/Profile.vue";
+import Settings from "@/components/settings/Settings.vue";
+import Staff from "@/components/authentication/AuthStaff.vue";
+import StaffProfile from "@/components/profile/StaffProfile.vue";
+import StaffSettings from "@/components/settings/StaffSettings.vue";
+import Admin from "@/components/cabinets/Admin.vue";
+import Cook from "@/components/cabinets/Cook.vue";
+import Waiter from "@/components/cabinets/Waiter.vue";
+import Demo from "@/components/cabinets/Demo.vue";
+import EditMenu from "@/components/menu/EditMenu.vue";
+import Chef from "@/components/cabinets/Chef.vue";
 
 
 

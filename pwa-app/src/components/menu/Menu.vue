@@ -150,8 +150,11 @@
       </div>      
     </div>
    
-      <Button class="close-dialog" @click="closeCart">
+      <Button class="close-dialog2" @click="closeCart">
         Закрити
+      </Button>
+      <Button class="order-dialog" @click="redirectToHomePage" :disabled="disableOrder">
+        Замовити
       </Button>
 
     </Dialog>
@@ -190,6 +193,7 @@ const busy = ref(false);
 const Cart = ref(false);
 const OrderList = ref([]);
 const Summary = ref('');
+const disableOrder = ref(true);
 
 
 onMounted(async () => {
@@ -230,7 +234,17 @@ const getChosen = () => {
 const openOrder = () => {
   Cart.value = true;
   getChosen();
+  disableOrder.value = checkOrder();
 }
+const checkOrder = () => {
+  if(OrderList.value.length === 0){
+    console.log("orders", OrderList.value)
+    return true;
+  }
+  else{
+    return false;
+  }
+} 
 
 const addToCart = (item) => {
   const email = localStorage.getItem("email");
@@ -678,6 +692,35 @@ body {
   font-family: "Neucha";
     
    
+    
+}
+.close-dialog2{
+  background: white;
+  border: none;
+  color: black;  
+  width: 100px;
+  border-radius: 50px;
+
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-family: "Neucha";
+   
+  
+   
+    
+}
+.order-dialog{
+  background: white;
+  border: none;
+  color: black;
+  position: absolute;
+
+  width: 100px;
+  border-radius: 50px;
+  right: 25px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-family: "Neucha";
     
 }
 .close-dialog:focus {
