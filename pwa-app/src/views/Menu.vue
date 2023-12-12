@@ -316,8 +316,8 @@ const greetingsFunc = () => {
           console.log('busy');
         });  
                
-        socket.on('tableJoined', () => {
-              
+        socket.on('tableJoined', (message) => {
+        console.log('message', message);
         text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
         greetings.value = true;
         console.log('tableJoined');
