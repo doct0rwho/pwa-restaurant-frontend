@@ -131,17 +131,17 @@
     
     <div class="greetings-text">Ваше замовлення: {{ Summary }} UAH</div>
     <div class="order-lsit">
-      <div v-for="item in OrderList" :key="item.name">
+      <div v-for="order in OrderList" :key="order.name">
        
         
             <div class="item-name2">
-              {{ item.name }}
-              <Button class="remove-from-cart" @click="removeFromCart(item)">
+              {{ order.name }}
+              <Button class="remove-from-cart" @click="removeFromCartInList(order)">
               <i class="pi pi-times" style="font-size: 1.5rem;"></i>
             </Button>
 
             </div>
-            <div class="item-price">{{ item.price }} UAH</div>
+            <div class="item-price">{{ order.price }} UAH</div>
             
  
 
@@ -248,18 +248,42 @@ const addToCart = (item) => {
 }
 const removeFromCart = (item) => {
   const email = localStorage.getItem("email");
+  console.log('item', item);
   const data = {
     email: email,
     foodId: item.id,
     table: table.value,
   };
-  console.log('data', data);
+  console.log('dataVUDALENIE', data);
+  
   socket.emit('removeFood', data);
-  const index = OrderList.value.findIndex((item) => item.name === item.name);
-  OrderList.value.splice(index, 1);
-  Summary.value = Summary.value - item.price;
-  socket.on('foodRemoved', () => {
-    
+  
+  
+  
+  socket.on('foodRemoved', (message) => {
+    console.log('message', message);
+    getChosen();
+  console.log('food removed');
+  
+  });
+}
+const removeFromCartInList = (item) => {
+  const email = localStorage.getItem("email");
+  console.log('item', item);
+  const data = {
+    email: email,
+    foodId: item._id,
+    table: table.value,
+  };
+  console.log('dataVUDALENIE', data);
+  
+  socket.emit('removeFood', data);
+  
+  
+  
+  socket.on('foodRemoved', (message) => {
+    console.log('message', message);
+    getChosen();
   console.log('food removed');
   
   });
@@ -290,9 +314,10 @@ const greetingsFunc = () => {
           text.value = "На жаль, цей столик вже зайнятий. Будь ласка, оберіть інший столик";
           greetings.value = true;
           console.log('busy');
-        });         
+        });  
+               
         socket.on('tableJoined', () => {
-          busy.value = false;     
+              
         text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
         greetings.value = true;
         console.log('tableJoined');
