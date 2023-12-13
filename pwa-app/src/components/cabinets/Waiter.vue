@@ -70,7 +70,7 @@ import { ref } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import io from "socket.io-client";
-const socket = io("ws://localhost:4000", {
+const socket = io("wss://diploma-lya6.onrender.com", {
   transports: ["websocket", "polling", "flashsocket"],
 });
 
