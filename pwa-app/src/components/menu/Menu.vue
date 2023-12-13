@@ -7,7 +7,7 @@
       <div class="header-text">Меню</div>
     </div>
     <div v-if="token" class="order">
-        <Button class="order-button" @click="openOrder" :disabled="table === ''">
+        <Button class="order-button" @click="openOrder" :disabled="table === '' || busy">
           <div class="order-button-text">
             Ваше замовлення
             <i class="pi pi-shopping-cart" ></i>
@@ -37,12 +37,12 @@
                   </div>
                 </Button>
                 
-                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === ''">
+                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === '' || busy || !orderEditable">
   <div class="add-to-cart-text">
     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
   </div>
 </Button>
-<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === ''">
+<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === '' || busy || !orderEditable">
   <div class="add-to-cart-text">
     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
   </div>
@@ -57,12 +57,12 @@
                   </div>
                 </Button>
                 
-                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === ''">
+                <Button v-if="!inCart(item.name)" class="add-to-cart" @click="addToCart(item)" :disabled="table === '' || busy || !orderEditable">
   <div class="add-to-cart-text">
     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
   </div>
 </Button>
-<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === ''">
+<Button v-if="inCart(item.name)" class="remove-to-cart" @click="removeFromCart(item)" :disabled="table === '' || busy || !orderEditable">
   <div class="add-to-cart-text">
     <i class="pi pi-shopping-cart" style="font-size: 1.5rem;"></i>
   </div>
@@ -136,10 +136,11 @@
         
             <div class="item-name2">
               {{ order.name }}
-              <Button class="remove-from-cart" @click="removeFromCartInList(order)">
+              
+              <Button v-if="orderEditable" class="remove-from-cart" @click="removeFromCartInList(order) ">
               <i class="pi pi-times" style="font-size: 1.5rem;"></i>
             </Button>
-
+          
             </div>
             <div class="item-price">{{ order.price }} UAH</div>
             
@@ -153,9 +154,10 @@
       <Button class="close-dialog2" @click="closeCart">
         Закрити
       </Button>
-      <Button class="order-dialog" @click="redirectToHomePage" :disabled="disableOrder">
+      <Button v-if="orderEditable" class="order-dialog" @click="createOrdered" :disabled="disableOrder">
         Замовити
       </Button>
+      <div v-if="!orderEditable" class="order-status">{{ orderStatus }}   </div>
 
     </Dialog>
   </div>
@@ -168,7 +170,7 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("wss://diploma-lya6.onrender.com",
+const socket = io("ws://localhost:4000",
 { transports: ['websocket', 'polling', 'flashsocket'] } 
 );
 socket.on('connect', () => {
@@ -194,6 +196,8 @@ const Cart = ref(false);
 const OrderList = ref([]);
 const Summary = ref('');
 const disableOrder = ref(true);
+const orderEditable = ref(true); 
+const orderStatus = ref('');
 
 
 onMounted(async () => {
@@ -226,7 +230,24 @@ const getChosen = () => {
   socket.on('order', (data) => {
     console.log('data', data);
     OrderList.value = data.orders;
-    Summary.value = data.summary;
+    Summary.value = data.summary;    
+    if(data.status === 'created'){
+      orderEditable.value = true;
+      orderStatus.value = 'Створено';
+    }
+    else if(data.status === 'ordered'){
+      orderEditable.value = false; 
+      orderStatus.value = 'В обробці';     
+    }
+    else if(data.status === 'cooking'){
+      orderEditable.value = false; 
+      orderStatus.value = 'Готується';     
+    }
+    else if(data.status === 'ready'){
+      orderEditable.value = false; 
+      orderStatus.value = 'Готово';  
+    }
+    
     console.log('Summary', Summary.value);
     console.log('OrderList', OrderList.value);
   });
@@ -283,6 +304,17 @@ const removeFromCart = (item) => {
   
   });
 }
+const createOrdered = () => {  
+  const data = {   
+    table: table.value,
+  };
+  console.log('data', data);
+  socket.emit('createOrder', data);
+  socket.on('orderCreated', () => {
+    console.log('order created');
+    getChosen();
+  });
+}
 const removeFromCartInList = (item) => {
   const email = localStorage.getItem("email");
   console.log('item', item);
@@ -324,6 +356,7 @@ const greetingsFunc = () => {
         socket.emit('join', {
           table: table.value,
           email: localStorage.getItem("email"),
+          role: localStorage.getItem("role"),          
         });
         socket.on('busy', () => {
           busy.value = true;
@@ -331,6 +364,13 @@ const greetingsFunc = () => {
           greetings.value = true;
           console.log('busy');
         });  
+        socket.on('return', () => {
+          busy.value = false;
+          //text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
+          greetings.value = false;
+          getChosen();
+          console.log('return');
+        });
                
         socket.on('tableJoined', (message) => {
         console.log('message', message);
@@ -727,9 +767,23 @@ body {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
+.order-status{
+  background: #dac2c2;
+  border: none;
+  color: black;
+  position: absolute;
+
+  width: 100px;
+  border-radius: 50px;
+  right: 25px;
+  margin-top: -40px;
+  padding: 10px 20px;
+  font-family: "Neucha";
+    
+}
 .remove-from-cart{
-    position: relative;
-    top: 15px;
+    position: absolute;
+    
     left: 0; 
     background-color: transparent;
     border: none;
