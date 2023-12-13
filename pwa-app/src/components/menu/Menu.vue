@@ -154,10 +154,13 @@
       <Button class="close-dialog2" @click="closeCart">
         Закрити
       </Button>
-      <Button v-if="orderEditable" class="order-dialog" @click="createOrdered" :disabled="disableOrder">
+      <Button v-if="orderEditable && !ready" class="order-dialog" @click="createOrdered" :disabled="disableOrder">
         Замовити
       </Button>
-      <div v-if="!orderEditable" class="order-status">{{ orderStatus }}   </div>
+      <Button v-if="!orderEditable && ready" @click="paidOrder" class="order-dialog" >
+        Оплатити
+      </Button>
+      <div v-if="!orderEditable && !ready" class="order-status">{{ orderStatus }}   </div>
 
     </Dialog>
   </div>
@@ -186,7 +189,7 @@ const router = useRouter();
 const sortedData = ref([]);
 const token = ref("");
 const favorites = ref([]);
-
+const personal = ref(false);
 const greetings = ref(false);
 const text = ref("");
 const table = ref("");
@@ -198,6 +201,7 @@ const Summary = ref('');
 const disableOrder = ref(true);
 const orderEditable = ref(true); 
 const orderStatus = ref('');
+const ready = ref(false);
 
 
 onMounted(async () => {
@@ -222,10 +226,27 @@ onMounted(async () => {
     greetingsFunc();
   
 });
+
+socket.on('connect', () => {
+  console.log('connected');
+  getChosen();
+  checkerToken();
+  greetingsFunc();
+  offline.value = false;
+});
+socket.on('disconnect', () => {
+  console.log('disconnected');
+  getChosen();
+  checkerToken();
+  greetingsFunc();
+  offline.value = true;
+});
+
 const getChosen = () => {
   socket.emit('getOrder', {
     table: table.value,
     email: localStorage.getItem("email"),
+    role: localStorage.getItem("role"),
   });
   socket.on('order', (data) => {
     console.log('data', data);
@@ -234,24 +255,48 @@ const getChosen = () => {
     if(data.status === 'created'){
       orderEditable.value = true;
       orderStatus.value = 'Створено';
+      ready.value = false;
     }
     else if(data.status === 'ordered'){
       orderEditable.value = false; 
-      orderStatus.value = 'В обробці';     
+      orderStatus.value = 'В обробці'; 
+      ready.value = false;    
     }
     else if(data.status === 'cooking'){
       orderEditable.value = false; 
-      orderStatus.value = 'Готується';     
+      orderStatus.value = 'Готується';
+      ready.value = false;     
     }
     else if(data.status === 'ready'){
       orderEditable.value = false; 
-      orderStatus.value = 'Готово';  
+      ready.value = true;  
     }
     
     console.log('Summary', Summary.value);
     console.log('OrderList', OrderList.value);
   });
 }
+socket.on('movedToKitchen', () => {
+  console.log('movedToKitchen');
+  getChosen();
+});
+socket.on('markedAsReady', () => {
+  console.log('markedAsReady');
+  getChosen();
+});
+
+const paidOrder = () => {
+  const data = {
+    table: table.value,
+  };
+  console.log('data', data);
+  socket.emit('paidOrder', data);
+  socket.on('orderPaid', () => {
+    console.log('order paid');
+    getChosen();
+  });
+}
+
 const openOrder = () => {
   Cart.value = true;
   getChosen();
@@ -343,15 +388,39 @@ const greetingsFunc = () => {
     greetings.value = true;
     console.log('не увішов');
   }else{
-    if(table.value == ""){
+    if(table.value == "" && localStorage.getItem("role") !== 'staff'){
       text.value = "Ви не обрали столик. Для того, щоб замовити щось, будь ласка, оберіть столик та відскануйте QR-код за допомогою камери"; 
       greetings.value = true;
       console.log('не обрав столик');
     }else{
       if(localStorage.getItem("role") === 'staff'){
-        text.value = "Ви увійшли у аккаунт персоналу. Для того, щоб замовити щось, будь ласка, увійдіть у аккаунт клієнта";
+        socket.emit('joinStaff', {
+          table: table.value,
+          email: localStorage.getItem("email"),
+          role: localStorage.getItem("role"),          
+        });
+        socket.on('busyStaff', () => {
+          busy.value = true;
+          text.value = "На жаль, цей столик вже зайнятий. Будь ласка, оберіть інший столик";
+          greetings.value = true;
+          console.log('busy');
+        });  
+        socket.on('returnStaff', () => {
+          busy.value = false;
+          //text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
+          greetings.value = false;
+          personal.value = true;
+          getChosen();
+          console.log('return');
+        });
+               
+        socket.on('tableJoinedStaff', (message) => {
+        console.log('message', message);
+        text.value = `Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
+        personal.value = true;
         greetings.value = true;
-        console.log('персонал');
+        console.log('tableJoined');
+        });
       }else{        
         socket.emit('join', {
           table: table.value,
@@ -769,16 +838,17 @@ body {
 }
 .order-status{
   background: #dac2c2;
-  border: none;
-  color: black;
-  position: absolute;
+border: none;
+color: black;
+position: absolute;
+width: 100px;
+border-radius: 50px;
+right: 25px;
+margin-top: -40px;
+padding: 10px 20px;
+font-family: "Neucha";
+text-align: center; /* Center the text horizontally */
 
-  width: 100px;
-  border-radius: 50px;
-  right: 25px;
-  margin-top: -40px;
-  padding: 10px 20px;
-  font-family: "Neucha";
     
 }
 .remove-from-cart{

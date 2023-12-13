@@ -5,11 +5,12 @@
         <i class="pi pi-chevron-left"></i>
       </Button>
       <div class="header-text">Робочий кабінет</div>
+     
       <div v-if="!inRoom" class="chosen-text" >
         Оберіть столик:
         <div class="divider-line1"></div>
         <div style="margin-left: 40px; margin-top: 20px;" v-for="table in tableList" :key="table.table">         
-          <div>Столик: № {{table.table}}  <Button class="select-button" @click="waiterJoin(table.table)" >Виберіть</Button> </div>     
+          <div>Столик: № {{table.table}}  <Button v-if="!table.waiter" class="select-button" @click="waiterJoin(table.table)" >Виберіть</Button> </div>     
           <div>Мейл: {{ table.users  }}</div>  
           <div>Замовлення: 
             <div v-for="order in table.orders" :key="order.name">
@@ -23,16 +24,17 @@
       <div v-if="inRoom" class="chosen-text" >
         Столик №{{ OrderList.table }}
         <div v-for="order in OrderList.orders" :key="order.name">
-          <div>{{order.name}} <Button class="delete-item">
-            <i class="pi pi-trash"></i>
-          </Button></div>
+          <div>{{order.name}}</div>
           
         </div>
-        <Button class="add-new-food">
-          Додати їжу
-        </Button>
+       
       </div>
     </div>
+    <div v-if="cooking && inRoom" class="status">Готується</div>
+    <div v-if="ready && inRoom" class="status">Готово</div>
+    <Button v-if="ordered && inRoom" class="moveToKitchen" @click="moveToKitchen">
+        Передати на кухню
+      </Button>
     </div>
 </template>
 <script setup>
@@ -46,19 +48,15 @@ import io from 'socket.io-client';
 const socket = io("ws://localhost:4000",
 { transports: ['websocket', 'polling', 'flashsocket'] } 
 );
-socket.on('connect', () => {
-  console.log('connected');
-  // offline.value = false;
-});
-socket.on('disconnect', () => {
-  console.log('disconnected');
-  // offline.value = true;
-});
+
 const router = useRouter();
 
 const OrderList = ref([]);
 const tableList = ref([]);
 const inRoom = ref(false);
+const cooking = ref(false);
+const ordered = ref(false);
+const ready = ref(false);
 
 socket.on('orderCreated', () => {
     console.log('order created');
@@ -70,6 +68,21 @@ onMounted(() => {
   isInRoom();
   getOrdered()
   getRoomInfo();
+});
+
+socket.on('connect', () => {
+  console.log('connected');
+  isInRoom();
+  getOrdered()
+  getRoomInfo();  
+  // offline.value = false;
+});
+socket.on('disconnect', () => {
+  console.log('disconnected');
+  isInRoom();
+  getOrdered()
+  getRoomInfo();
+  // offline.value = true;
 });
 
 // const chooseTable = (table) => {
@@ -105,6 +118,12 @@ const waiterJoin = (table) => {
     getRoomInfo();
   });
 };
+socket.on('markedAsReady', () => {
+  console.log('markedAsReady');
+  isInRoom();
+  getOrdered();
+  getRoomInfo();
+});
 const getRoomInfo = () => {
   let data = {
     email: localStorage.getItem("email"),    
@@ -113,6 +132,31 @@ const getRoomInfo = () => {
   socket.on('roomInfo', (data) => {
     console.log('roomInfo',data);
     OrderList.value = data;
+    if(data.status === 'cooking') {
+      cooking.value = true;
+      ordered.value = false;
+      ready.value = false;
+    } else if(data.status === 'ordered') {
+      ordered.value = true;
+      cooking.value = false;
+      ready.value = false;
+    }else if (data.status === 'ready') {
+      ready.value = true;
+      cooking.value = false;
+      ordered.value = false;
+    }
+  });
+};
+
+const moveToKitchen = () => {
+  let data = {
+    table: OrderList.value.table,   
+  }
+  socket.emit('moveToKitchen', data);
+  socket.on('movedToKitchen', () => {
+    isInRoom();
+    getOrdered();
+    getRoomInfo();
   });
 };
 
@@ -121,7 +165,7 @@ const getOrdered = () => {
     console.log(data);
   });
   socket.on('orderedOrders', (data) => {
-    console.log('INFORMATIOn',data);
+    console.log('INFORMATIOn',data);    
     tableList.value = data;
   });
 };
@@ -268,5 +312,43 @@ const redirectToHomePage = () => {
 .add-new-food:focus {
     outline: none; /* Optional: Remove focus outline */
     box-shadow: none;
+}
+.moveToKitchen {
+    position: fixed;
+    bottom: 0;
+    left:50%;
+    transform: translate(-50%, -50%);
+   
+    
+    height: 40px;
+    background-color: #f9f6a5;
+    border: none;
+    border-radius: 50px;
+    outline: none;
+    font-size: 20px;
+    font-weight: 500;
+    color: #000000;
+    z-index: 3;
+    font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.moveToKitchen:focus {
+    outline: none; /* Optional: Remove focus outline */
+    box-shadow: none;
+}
+.status {
+  background: #dac2c2;
+  border: none;
+  color: black;
+  position: fixed;
+
+  bottom: 0;
+  left:50%;
+    transform: translate(-50%, -50%);
+  width: 100px;
+  border-radius: 50px;
+  
+  text-align: center;
+  padding: 10px 20px;
+  font-family: "Neucha";
 }
 </style>
