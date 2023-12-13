@@ -47,7 +47,7 @@ import { ref } from "vue";
 import 'vue3-toastify/dist/index.css';
 
 import io from 'socket.io-client';
-const socket = io("wss://diploma-lya6.onrender.com", {
+const socket = io("https://diploma-lya6.onrender.com", {
   transports: ['websocket'], // Use only WebSocket transport
   secure: true, // Explicitly set secure to true for WSS
 });
