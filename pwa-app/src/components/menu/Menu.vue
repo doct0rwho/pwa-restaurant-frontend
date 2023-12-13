@@ -31,9 +31,9 @@
               <div class="item-weight" style="margin-bottom: 20px;">Вага: {{ item.weight }} г</div>
               <div v-if="token" class="item-buttons" >
                 <div v-if="chosen(item.name)">
-                    <Button class="add-to-favorites" @click="removeFromFavorites(item)">
+                    <Button class="add-to-favorites" @click="removeFromFavorites(item)" :disabled="personal">
                   <div class="add-to-favorites-text">
-                    <i class="pi pi-star-fill" style="font-size: 1.5rem;" ></i>
+                    <i v-if="!personal" class="pi pi-star-fill" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
                 
@@ -51,9 +51,9 @@
 
                 </div>
                 <div v-else>                 
-                <Button class="add-to-favorites" @click="addToFavorites(item.name)">
+                <Button class="add-to-favorites" @click="addToFavorites(item.name)" :disabled="personal">
                   <div class="add-to-favorites-text">
-                    <i class="pi pi-star" style="font-size: 1.5rem;" ></i>
+                    <i v-if="!personal" class="pi pi-star" style="font-size: 1.5rem;" ></i>
                   </div>
                 </Button>
                 
@@ -229,9 +229,7 @@ onMounted(async () => {
 
 socket.on('connect', () => {
   console.log('connected');
-  getChosen();
-  checkerToken();
-  greetingsFunc();
+ 
   offline.value = false;
 });
 socket.on('disconnect', () => {
@@ -394,7 +392,7 @@ const greetingsFunc = () => {
       console.log('не обрав столик');
     }else{
       if(localStorage.getItem("role") === 'staff'){
-        socket.emit('joinStaff', {
+        socket.emit('join', {
           table: table.value,
           email: localStorage.getItem("email"),
           role: localStorage.getItem("role"),          
@@ -410,7 +408,7 @@ const greetingsFunc = () => {
           //text.value = `Вітаємо! Ви обрали столик №${table.value}. Для того, щоб замовити щось, будь ласка, оберіть страву та натисніть кнопку "Ваше замовлення"`;
           greetings.value = false;
           personal.value = true;
-          getChosen();
+          // getChosen();
           console.log('return');
         });
                
@@ -524,7 +522,7 @@ const checkerToken = () => {
     token.value = false;
   } else {
     if(localStorage.getItem("role") === 'staff'){
-      token.value = false;
+      token.value = true;
     }
     else{
       const email = localStorage.getItem("email");
