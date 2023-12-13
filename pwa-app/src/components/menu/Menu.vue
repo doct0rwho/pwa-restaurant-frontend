@@ -173,9 +173,10 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("wss://diploma-lya6.onrender.com",
-{ transports: ['websocket', 'polling', 'flashsocket'] } 
-);
+const socket = io("wss://diploma-lya6.onrender.com", {
+  transports: ['websocket'], // Use only WebSocket transport
+  secure: true, // Explicitly set secure to true for WSS
+});
 socket.on('connect', () => {
   console.log('connected');
   offline.value = false;

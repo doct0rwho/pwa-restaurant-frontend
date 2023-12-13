@@ -71,7 +71,8 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import io from "socket.io-client";
 const socket = io("wss://diploma-lya6.onrender.com", {
-  transports: ["websocket", "polling", "flashsocket"],
+  transports: ['websocket'], // Use only WebSocket transport
+  secure: true, // Explicitly set secure to true for WSS
 });
 
 const router = useRouter();
