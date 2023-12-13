@@ -30,8 +30,10 @@
        
       </div>
     </div>
-    <div v-if="cooking && inRoom" class="status">Готується</div>
-    <div v-if="ready && inRoom" class="status">Готово</div>
+    <div v-if="cooking && inRoom" class="status">Готується</div>   
+    <Button v-if="ready && inRoom" class="moveToKitchen" @click="paidOrder">
+        Сплачено
+      </Button>
     <Button v-if="ordered && inRoom" class="moveToKitchen" @click="moveToKitchen">
         Передати на кухню
       </Button>
@@ -42,10 +44,10 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-//import { toast } from 'vue3-toastify';
+import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("ws://diploma-lya6.onrender.com/",
+const socket = io("ws://localhost:4000",
 { transports: ['websocket', 'polling', 'flashsocket'] } 
 );
 
@@ -57,6 +59,7 @@ const inRoom = ref(false);
 const cooking = ref(false);
 const ordered = ref(false);
 const ready = ref(false);
+const table = ref("");
 
 socket.on('orderCreated', () => {
     console.log('order created');
@@ -124,6 +127,29 @@ socket.on('markedAsReady', () => {
   getOrdered();
   getRoomInfo();
 });
+socket.on('orderPaid', () => {
+    console.log('order paid');
+    isInRoom();
+  getOrdered();
+  getRoomInfo();
+  });
+  const paidOrder = () => {
+  const data = {
+    table: table.value,
+  };
+  console.log('data', data);
+  socket.emit('paidOrder', data);
+  socket.on('returnPaid', () => {
+    console.log('returnPaid');
+    toast.success("Замовлення оплачено");
+    
+    
+  });
+  socket.on('orderPaid', () => {
+    console.log('order paid');
+   
+  });
+}
 const getRoomInfo = () => {
   let data = {
     email: localStorage.getItem("email"),    
@@ -132,6 +158,7 @@ const getRoomInfo = () => {
   socket.on('roomInfo', (data) => {
     console.log('roomInfo',data);
     OrderList.value = data;
+    table.value = data.table;
     if(data.status === 'cooking') {
       cooking.value = true;
       ordered.value = false;

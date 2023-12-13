@@ -173,7 +173,7 @@ import { ref } from "vue";
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 import io from 'socket.io-client';
-const socket = io("ws://diploma-lya6.onrender.com/",
+const socket = io("ws://localhost:4000",
 { transports: ['websocket', 'polling', 'flashsocket'] } 
 );
 socket.on('connect', () => {
@@ -289,9 +289,17 @@ const paidOrder = () => {
   };
   console.log('data', data);
   socket.emit('paidOrder', data);
+  socket.on('returnPaid', () => {
+    console.log('returnPaid');
+    toast.success("Замовлення оплачено");
+    setTimeout(() => {
+      router.push("/");
+    }, 2000);
+    
+  });
   socket.on('orderPaid', () => {
     console.log('order paid');
-    getChosen();
+   
   });
 }
 
@@ -386,7 +394,7 @@ const greetingsFunc = () => {
     greetings.value = true;
     console.log('не увішов');
   }else{
-    if(table.value == "" && localStorage.getItem("role") !== 'staff'){
+    if(table.value == ""){
       text.value = "Ви не обрали столик. Для того, щоб замовити щось, будь ласка, оберіть столик та відскануйте QR-код за допомогою камери"; 
       greetings.value = true;
       console.log('не обрав столик');
