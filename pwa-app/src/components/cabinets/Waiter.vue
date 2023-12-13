@@ -1,55 +1,78 @@
 <template>
-    <div>
-        <div class="header">
+  <div>
+    <div class="header">
       <Button class="back-button" @click="redirectToHomePage">
         <i class="pi pi-chevron-left"></i>
       </Button>
       <div class="header-text">Робочий кабінет</div>
-     
-      <div v-if="!inRoom" class="chosen-text" >
+
+      <div v-if="!inRoom" class="chosen-text">
         Оберіть столик:
         <div class="divider-line1"></div>
-        <div style="margin-left: 40px; margin-top: 20px;" v-for="table in tableList" :key="table.table">         
-          <div>Столик: № {{table.table}}  <Button v-if="!table.waiter" class="select-button" @click="waiterJoin(table.table)" >Виберіть</Button> </div>     
-          <div>Мейл: {{ table.users  }}</div>  
-          <div>Замовлення: 
+        <div
+          style="margin-left: 40px; margin-top: 20px"
+          v-for="table in tableList"
+          :key="table.table"
+        >
+          <div>
+            Столик: № {{ table.table }}
+            <Button
+              v-if="!table.waiter"
+              class="select-button"
+              @click="waiterJoin(table.table)"
+              >Виберіть</Button
+            >
+            <Button class="delete">
+              <i class="pi pi-trash" @click="deleteTable(table.table)"></i>
+            </Button>
+          </div>
+          <div>Мейл: {{ table.users }}</div>
+          <div>
+            Замовлення:
             <div v-for="order in table.orders" :key="order.name">
-              <div style="margin-left: 40px;">{{order.name}}</div>           
+              <div style="margin-left: 40px">{{ order.name }}</div>
             </div>
-          </div> 
-         
+          </div>
+
           <div class="divider-line2"></div>
         </div>
       </div>
-      <div v-if="inRoom" class="chosen-text" >
+      <div v-if="inRoom" class="chosen-text">
         Столик №{{ OrderList.table }}
         <div v-for="order in OrderList.orders" :key="order.name">
-          <div>{{order.name}}</div>
-          
+          <div>{{ order.name }}</div>
         </div>
-       
       </div>
     </div>
-    <div v-if="cooking && inRoom" class="status">Готується</div>   
-    <Button v-if="ready && inRoom" class="moveToKitchen" @click="paidOrder">
-        Сплачено
-      </Button>
-    <Button v-if="ordered && inRoom" class="moveToKitchen" @click="moveToKitchen">
-        Передати на кухню
-      </Button>
-    </div>
+    <div v-if="cooking && inRoom" class="status">Готується</div>
+    <div v-if="ready && inRoom && user" class="status">Очікування оплати</div>
+    <Button
+      v-if="ready && inRoom && !user"
+      class="moveToKitchen"
+      @click="paidOrder"
+    >
+      Сплачено
+    </Button>
+    <Button
+      v-if="ordered && inRoom"
+      class="moveToKitchen"
+      @click="moveToKitchen"
+    >
+      Передати на кухню
+    </Button>
+  </div>
 </template>
 <script setup>
 // import axios from "axios";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { toast } from 'vue3-toastify';
-import 'vue3-toastify/dist/index.css';
-import io from 'socket.io-client';
-const socket = io("ws://localhost:4000",
-{ transports: ['websocket', 'polling', 'flashsocket'] } 
-);
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import io from "socket.io-client";
+const socket = io("ws://localhost:4000", {
+  transports: ["websocket", "polling", "flashsocket"],
+});
 
 const router = useRouter();
 
@@ -60,52 +83,65 @@ const cooking = ref(false);
 const ordered = ref(false);
 const ready = ref(false);
 const table = ref("");
+const user = ref(false);
 
-socket.on('orderCreated', () => {
-    console.log('order created');
-    getOrdered();    
-  });
+socket.on("orderCreated", () => {
+  console.log("order created");
+  getOrdered();
+});
 
 onMounted(() => {
   //toast.info('Вітаємо у робочому кабінеті!');
   isInRoom();
-  getOrdered()
+  getOrdered();
   getRoomInfo();
 });
 
-socket.on('connect', () => {
-  console.log('connected');
+socket.on("connect", () => {
+  console.log("connected");
   isInRoom();
-  getOrdered()
-  getRoomInfo();  
+  getOrdered();
+  getRoomInfo();
   // offline.value = false;
 });
-socket.on('disconnect', () => {
-  console.log('disconnected');
+socket.on("disconnect", () => {
+  console.log("disconnected");
   isInRoom();
-  getOrdered()
+  getOrdered();
   getRoomInfo();
   // offline.value = true;
 });
 
 // const chooseTable = (table) => {
-  // socket.emit('chooseTable', table);
-  // socket.on('tableChosen', (data) => {
-  //   console.log('INFORMATIOn',data);
-  //   OrderList.value = data;
-  //   inRoom.value = true;
-  // });
+// socket.emit('chooseTable', table);
+// socket.on('tableChosen', (data) => {
+//   console.log('INFORMATIOn',data);
+//   OrderList.value = data;
+//   inRoom.value = true;
+// });
 // };
 
 const isInRoom = () => {
   const data = {
     email: localStorage.getItem("email"),
     role: localStorage.getItem("role"),
-  }
-  socket.emit('isInRoom', data);
-  socket.on('return', (data) => {
+  };
+  socket.emit("isInRoom", data);
+  socket.on("return", (data) => {
     inRoom.value = data;
-    console.log('IN ROOM',data);
+    console.log("IN ROOM", data);
+  });
+};
+const deleteTable = (table) => {
+  const data = {
+    table: table,
+  };
+  socket.emit("deleteOrder", data);
+  socket.on("orderDelete", () => {
+    console.log("table deleted");
+    isInRoom();
+    getOrdered();
+    getRoomInfo();
   });
 };
 
@@ -113,61 +149,63 @@ const waiterJoin = (table) => {
   let data = {
     email: localStorage.getItem("email"),
     table: table,
-  }
-  socket.emit('waiterJoin', data);
-  socket.on('waiterJoined', () => {
+  };
+  socket.emit("waiterJoin", data);
+  socket.on("waiterJoined", () => {
     isInRoom();
     getOrdered();
     getRoomInfo();
   });
 };
-socket.on('markedAsReady', () => {
-  console.log('markedAsReady');
+socket.on("markedAsReady", () => {
+  console.log("markedAsReady");
   isInRoom();
   getOrdered();
   getRoomInfo();
 });
-socket.on('orderPaid', () => {
-    console.log('order paid');
-    isInRoom();
+socket.on("orderPaid", () => {
+  console.log("order paid");
+  isInRoom();
   getOrdered();
   getRoomInfo();
-  });
-  const paidOrder = () => {
+});
+const paidOrder = () => {
   const data = {
     table: table.value,
   };
-  console.log('data', data);
-  socket.emit('paidOrder', data);
-  socket.on('returnPaid', () => {
-    console.log('returnPaid');
+  console.log("data", data);
+  socket.emit("paidOrder", data);
+  socket.on("returnPaid", () => {
+    console.log("returnPaid");
     toast.success("Замовлення оплачено");
-    
-    
   });
-  socket.on('orderPaid', () => {
-    console.log('order paid');
-   
+  socket.on("orderPaid", () => {
+    console.log("order paid");
   });
-}
+};
 const getRoomInfo = () => {
   let data = {
-    email: localStorage.getItem("email"),    
-  }
-  socket.emit('getRoomInfo', data);
-  socket.on('roomInfo', (data) => {
-    console.log('roomInfo',data);
+    email: localStorage.getItem("email"),
+  };
+  socket.emit("getRoomInfo", data);
+  socket.on("roomInfo", (data) => {
+    console.log("roomInfo", data);
     OrderList.value = data;
     table.value = data.table;
-    if(data.status === 'cooking') {
+    if (!data.users) {
+      user.value = false;
+    } else {
+      user.value = true;
+    }
+    if (data.status === "cooking") {
       cooking.value = true;
       ordered.value = false;
       ready.value = false;
-    } else if(data.status === 'ordered') {
+    } else if (data.status === "ordered") {
       ordered.value = true;
       cooking.value = false;
       ready.value = false;
-    }else if (data.status === 'ready') {
+    } else if (data.status === "ready") {
       ready.value = true;
       cooking.value = false;
       ordered.value = false;
@@ -177,10 +215,10 @@ const getRoomInfo = () => {
 
 const moveToKitchen = () => {
   let data = {
-    table: OrderList.value.table,   
-  }
-  socket.emit('moveToKitchen', data);
-  socket.on('movedToKitchen', () => {
+    table: OrderList.value.table,
+  };
+  socket.emit("moveToKitchen", data);
+  socket.on("movedToKitchen", () => {
     isInRoom();
     getOrdered();
     getRoomInfo();
@@ -188,11 +226,11 @@ const moveToKitchen = () => {
 };
 
 const getOrdered = () => {
-  socket.emit('getOrdered', (data) => {
+  socket.emit("getOrdered", (data) => {
     console.log(data);
   });
-  socket.on('orderedOrders', (data) => {
-    console.log('INFORMATIOn',data);    
+  socket.on("orderedOrders", (data) => {
+    console.log("INFORMATIOn", data);
     tableList.value = data;
   });
 };
@@ -283,84 +321,81 @@ const redirectToHomePage = () => {
   width: 100vw;
 }
 .select-button {
-    position: relative;  
-   
-   
-    
-    background-color: #f9f6a5;
-    border: none;
-    outline: none;
-    border-radius: 50px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #000000;
-    font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+  position: relative;
+
+  background-color: #f9f6a5;
+  border: none;
+  outline: none;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
 
 .select-button:focus {
-    outline: none; /* Optional: Remove focus outline */
-    box-shadow: none;
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 .delete-item {
-    position: relative;  
-    top: 0;
-    left: 0;
-    margin-left: 0px;
-    margin-top: 2px;
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-size: 20px;
-    font-weight: 500;
-    color: red
+  position: relative;
+  top: 0;
+  left: 0;
+  margin-left: 0px;
+  margin-top: 2px;
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: red;
 }
 .delete-item:focus {
-    outline: none; /* Optional: Remove focus outline */
-    box-shadow: none;
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 .add-new-food {
-    position: relative;  
-    top: 0;
-    left: 0;
-    margin-left: 0px;
-    margin-top: 20px;
-    
-    height: 40px;
-    background-color: transparent;
-    border: none;
-    outline: none;
-    font-size: 30px;
-    font-weight: 500;
-    color: green;
-    font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+  position: relative;
+  top: 0;
+  left: 0;
+  margin-left: 0px;
+  margin-top: 20px;
+
+  height: 40px;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  font-size: 30px;
+  font-weight: 500;
+  color: green;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
 .add-new-food:focus {
-    outline: none; /* Optional: Remove focus outline */
-    box-shadow: none;
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 .moveToKitchen {
-    position: fixed;
-    bottom: 0;
-    left:50%;
-    transform: translate(-50%, -50%);
-   
-    
-    height: 40px;
-    background-color: #f9f6a5;
-    border: none;
-    border-radius: 50px;
-    outline: none;
-    font-size: 20px;
-    font-weight: 500;
-    color: #000000;
-    z-index: 3;
-    font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  height: 40px;
+  background-color: #f9f6a5;
+  border: none;
+  border-radius: 50px;
+  outline: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+  z-index: 3;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
 .moveToKitchen:focus {
-    outline: none; /* Optional: Remove focus outline */
-    box-shadow: none;
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 .status {
   background: #dac2c2;
@@ -369,13 +404,31 @@ const redirectToHomePage = () => {
   position: fixed;
 
   bottom: 0;
-  left:50%;
-    transform: translate(-50%, -50%);
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 100px;
   border-radius: 50px;
-  
+
   text-align: center;
   padding: 10px 20px;
   font-family: "Neucha";
+}
+.delete{
+  
+  
+  
+ height: 40px;
+  margin-left: 30px;
+  border-radius: 50px;
+  background-color: #f9f6a5;
+  border: none;
+  outline: none;
+  font-size: 20px;
+  font-weight: 500;
+  color: red;
+}
+.delete:focus {
+  outline: none; /* Optional: Remove focus outline */
+  box-shadow: none;
 }
 </style>

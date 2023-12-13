@@ -277,11 +277,22 @@ const getChosen = () => {
 socket.on('movedToKitchen', () => {
   console.log('movedToKitchen');
   getChosen();
+  checkerToken();
+  greetingsFunc();
 });
 socket.on('markedAsReady', () => {
   console.log('markedAsReady');
   getChosen();
+  checkerToken();
+  greetingsFunc();
 });
+socket.on("orderDelete", () => {
+  console.log('orderPaid');
+  getChosen();
+  checkerToken();
+  greetingsFunc();
+});
+
 
 const paidOrder = () => {
   const data = {
