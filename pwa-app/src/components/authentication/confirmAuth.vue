@@ -48,7 +48,7 @@ const getUserByToken = () =>{
     
    
     axios
-      .get(`https://diploma-lya6.onrender.com/get/user/by/token/${userToken.value}`)
+      .get(`https://diploma-lya6.onrender.com/user/by/token/${userToken.value}`)
       .then((response) => {
         console.log(response.data.data);
         userEmail.value = response.data.data.email;
@@ -56,20 +56,24 @@ const getUserByToken = () =>{
       })
       .catch((error) => {
         console.log(error);
-    if(error.response.status == 404){
-        router.push('/');
+    // if(error.response.status == 404){
+    //     router.push('/');
     
-      }
+    //   }
     
 })
 }
 const registerAcc = () =>{
     if(userPassword.value == userConfirmPassword.value){
+
+        console.log(userEmail.value);
+        console.log(userPassword.value)
+        console.log(userConfirmPassword.value)
         axios
       .post(`https://diploma-lya6.onrender.com/application/approved/user`, {
         email: userEmail.value,
         password: userPassword.value,
-        dublicatePassword: userConfirmPassword.value,
+        duplicatePassword: userConfirmPassword.value,
       })
       .then((response) => {
         console.log(response.data);
