@@ -182,12 +182,26 @@ const decline2 = () => {
 };
 
 const inviteUser = () => {
+  let temp;
+  console.log(selectedRole.value.name);
+  if (selectedRole.value.name == "Адмін") {
+    temp = "admin";
+  } else if (selectedRole.value.name == "Офіціант") {
+    temp = "waiter";
+  } else if (selectedRole.value.name == "Кухар") {
+    temp = "cook";
+  } else if (selectedRole.value.name == "Шеф-кухар"){
+    temp = "chef"; 
+  } else {
+    toast.error("Виберіть роль");
+    return;
+  }
   axios.post("https://diploma-lya6.onrender.com/worker/reg/by/admin", {
     adminEmail: localStorage.getItem("email"),
     workerEmail: userEmail.value,
     workerFirstName: userFirstName.value,
     workerLastName: userLastName.value,
-    newRole: selectedRole.value.name,
+    newRole: temp,
   }).then((response) => {
     console.log(response.data);
     toast.success("Юзера додано");    
