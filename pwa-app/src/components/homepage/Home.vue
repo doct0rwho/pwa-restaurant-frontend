@@ -37,7 +37,7 @@
       :showCloseIcon="false"
     >
     <div >
-    <div class="input-name">Назва</div>
+    <div class="input-name">Email</div>
     <InputText class="edit-name" v-model="itemName"  />
 </div>   
 
@@ -49,7 +49,7 @@
      
       <div>
         <Button class="decline2" @click="decline"> Закрити </Button>
-        <Button class="accept2" @click="acceptEdittedData">
+        <Button class="accept2" @click="sendEmail">
           Наліслати
         </Button>
       </div>
@@ -57,8 +57,11 @@
 </template>
 
 <script setup>
+import axios from "axios";
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 const dialog = ref(false);
 const itemName = ref("");
@@ -80,6 +83,25 @@ const decline = () => {
 const redirrectToAbout = () => {
   router.push('/menu');
 };
+
+const sendEmail = async () => {
+    await axios
+      .post(`http://localhost:4000/send/email`, {
+        email: itemName.value,
+        text: itemDesc.value,
+      })
+      .then((response) => {
+        console.log(response.data);
+        toast.success("Відгук надіслано");
+        dialog.value = false;
+        itemDesc.value = "";
+        itemName.value = "";
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+};
+
 </script>
 <style scoped>
 .image{
