@@ -106,9 +106,10 @@ const routes = [
     component: History,
   },
   {
-    path:"/application_approved/:token?",
+    path:"/application_approved",
     name: "Confirm",
     component: Confirm,
+    props: true,
   },
  
 ];

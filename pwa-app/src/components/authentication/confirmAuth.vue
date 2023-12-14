@@ -37,16 +37,18 @@ const userConfirmPassword = ref("");
 const router = useRouter();
 
 onMounted (() => {
-    userToken.value = router.currentRoute.value.params.token;
+    console.log( router.currentRoute.value.query.token)
+    userToken.value = router.currentRoute.value.query.token;
     getUserByToken();
     
 });
 
 const getUserByToken = () =>{
-    let token = router.currentRoute.value.params.token;
-    console.log(token);
+
+    
+   
     axios
-      .get(`https://diploma-lya6.onrender.com/get/user/by/token/${token}`)
+      .get(`https://diploma-lya6.onrender.com/get/user/by/token/${userToken.value}`)
       .then((response) => {
         console.log(response.data.data);
         userEmail.value = response.data.data.email;
