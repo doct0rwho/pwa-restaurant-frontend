@@ -22,7 +22,8 @@
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
             !isWorkerChefRoute &&
-            !isHistoryRoute
+            !isHistoryRoute &&
+            !isApprovedRoute
           "
           class="user"
         >
@@ -44,7 +45,8 @@
             !isWorkerCookRoute &&
             !isEditMenuRoute &&
             !isWorkerChefRoute &&
-            !isHistoryRoute
+            !isHistoryRoute &&
+            !isApprovedRoute
           "
           class="search"
         >
@@ -158,7 +160,8 @@
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
             !isWorkerChefRoute &&
-            !isHistoryRoute
+            !isHistoryRoute &&
+            !isApprovedRoute
           "
           class="user"
         >
@@ -180,7 +183,8 @@
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
             !isWorkerChefRoute &&
-            !isHistoryRoute
+            !isHistoryRoute &&
+            !isApprovedRoute
           "
           class="search"
         >
@@ -333,7 +337,10 @@ export default {
     },
     isHistoryRoute(){
       return this.$route.path === "/history";
-    }
+    },
+    isApprovedRoute(){
+      return this.$route.path === "/application_approved/";
+    },
   },
   created() {
     this.checkDevice();

@@ -6,6 +6,11 @@
       </Button>
       <div class="header-text">Робочий кабінет</div>
       <div>
+        <Button class="add-user" @click="newUser">
+           Новий користувач
+        </Button>
+      </div>
+      <div>
         <Button class="edit-menu" @click="redirectToEditMenu">
            Меню
         </Button>
@@ -65,6 +70,45 @@
         </Button>
       </div>
     </Dialog>
+    <Dialog
+      v-model:visible="dialog2"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    <div >
+    <div class="input-name">Email</div>
+    <InputText class="edit-name" v-model="userEmail"  />
+</div>  
+<div >
+<div class="input-name">Ім'я</div>
+    <InputText class="edit-name" v-model="userFirstName"  />
+</div> 
+<div > 
+<div class="input-name">Прізвище</div>
+    <InputText class="edit-name" v-model="userLastName"  />
+</div>  
+      <Dropdown
+        v-model="selectedRole"
+        :options="roles"
+        optionLabel="name"
+        placeholder="Виберіть роль"
+        :style="{ width: '100%' }"
+      />
+      <div>
+        <Button class="decline2" @click="decline2"> Decline </Button>
+        <Button class="accept2" @click="inviteUser">
+          Accept
+        </Button>
+      </div>
+    </Dialog>
   </div>
 </template>
 <script setup>
@@ -76,6 +120,10 @@ import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 const demoUsers = ref([]);
 const dialog = ref(false);
+const dialog2= ref(false);
+const userEmail = ref("");
+const userFirstName = ref("");
+const userLastName = ref("");
 const dialogUserName = ref("");
 const dialogUserEmail = ref("");
 const selectedRole = ref(null);
@@ -125,6 +173,41 @@ const decline = () => {
   selectedRole.value = null;
   dialog.value = false;
 };
+const decline2 = () => {
+  selectedRole.value = null;
+  dialog2.value = false;
+  userEmail.value = "";
+  userFirstName.value = "";
+  userLastName.value = "";
+};
+
+const inviteUser = () => {
+  axios.post("https://diploma-lya6.onrender.com/worker/reg/by/admin", {
+    adminEmail: localStorage.getItem("email"),
+    workerEmail: userEmail.value,
+    workerFirstName: userFirstName.value,
+    workerLastName: userLastName.value,
+    newRole: selectedRole.value.name,
+  }).then((response) => {
+    console.log(response.data);
+    toast.success("Юзера додано");    
+    dialog2.value = false;
+    userEmail.value = "";
+    userFirstName.value = "";
+    userLastName.value = "";
+  }).catch((error) => {
+    if(error.response.status == 400){
+      toast.error("Такий юзер вже існує");
+    } else {
+      toast.error("Щось пішло не так");
+    }
+  });
+}
+
+const newUser = () => {
+  dialog2.value = true;
+}
+
 const getDemoUsers = () => {
   axios
     .get(
@@ -244,7 +327,7 @@ const redirectToEditMenu = () => {
 }
 .table {
   position: absolute;
-  top: 110px;
+  top: 210px;
   left: 0; /* Adjust as needed */
   right: 0; /* Adjust as needed */
   width: 100%; /* Set width to 100% to cover the whole page */
@@ -369,7 +452,7 @@ const redirectToEditMenu = () => {
   border: none;
   color: black;
   position: absolute;
-  top: 60px;
+  top: 150px;
   border-radius: 20px;
   margin-right: 10px;
   width: 290px;
@@ -380,8 +463,45 @@ const redirectToEditMenu = () => {
   font-size: 30px;
   font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
+.add-user {
+  background: #f9f6a5;
+  border: none;
+  color: black;
+  position: absolute;
+  top: 60px;
+  border-radius: 20px;
+  margin-right: 10px;
+  width: 290px;
+  height: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 40px ;
+  text-align: center; 
+  font-size: 30px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
 .edit-menu:focus {
   outline: none;
   box-shadow: none;
+}
+.add-user:focus {
+  outline: none;
+  box-shadow: none;
+}
+.edit-name{
+  border: none;
+  background: white;
+    border-radius: 50px;
+  padding: 10px 10px;
+  width: 250px;
+  color: #000000;
+  font-size: small;
+}
+.input-name {
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
 }
 </style>

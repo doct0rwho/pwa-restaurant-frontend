@@ -15,6 +15,7 @@ import Demo from "@/components/cabinets/Demo.vue";
 import EditMenu from "@/components/menu/EditMenu.vue";
 import Chef from "@/components/cabinets/Chef.vue";
 import History from "@/components/history/History.vue";
+import Confirm from "@/components/authentication/confirmAuth.vue";
 
 
 
@@ -103,7 +104,12 @@ const routes = [
     path:"/history",
     name: "History",
     component: History,
-  }
+  },
+  {
+    path:"/application_approved/:token?",
+    name: "Confirm",
+    component: Confirm,
+  },
  
 ];
 

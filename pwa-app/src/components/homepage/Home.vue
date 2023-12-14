@@ -86,7 +86,7 @@ const redirrectToAbout = () => {
 
 const sendEmail = async () => {
     await axios
-      .post(`http://localhost:4000/send/email`, {
+      .post(`https://diploma-lya6.onrender.com/send/email`, {
         email: itemName.value,
         text: itemDesc.value,
       })
