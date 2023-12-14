@@ -15,7 +15,7 @@
                 Меню
             </div>
         </Button>
-        <Button class="feedback" @click="redirrectToServices">
+        <Button class="feedback" @click="openDialor">
             <div class="feedback-text">
                 Надіслати відгук
             </div>
@@ -23,11 +23,60 @@
          
     </div>
     <div class="divider-line-menu2"></div>
+    <Dialog
+      v-model:visible="dialog"
+      modal
+      :style="{
+        width: '50rem',
+        borderRadius: '50px',
+        background: '#f9f6a5',
+        marginTop: '20px',
+      }"
+      :breakpoints="{ '1199px': '75vw', '575px': '90vw' }"
+      :showHeader="false"
+      :showCloseIcon="false"
+    >
+    <div >
+    <div class="input-name">Назва</div>
+    <InputText class="edit-name" v-model="itemName"  />
+</div>   
+
+<div > 
+    <div class="input-description">Відгук</div>   
+    <Textarea class="desc-input" v-model="itemDesc" autoResize rows="5" cols="30" />
+</div>   
+
+     
+      <div>
+        <Button class="decline2" @click="decline"> Закрити </Button>
+        <Button class="accept2" @click="acceptEdittedData">
+          Наліслати
+        </Button>
+      </div>
+    </Dialog>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useRouter } from 'vue-router';
+
+const dialog = ref(false);
+const itemName = ref("");
+const itemDesc = ref("");
+
+
 const router = useRouter();
+
+const openDialor = () => {
+  dialog.value = true;
+};
+
+const decline = () => {
+  dialog.value = false;
+  itemDesc.value = "";
+    itemName.value = "";
+};
+
 const redirrectToAbout = () => {
   router.push('/menu');
 };
@@ -50,6 +99,7 @@ const redirrectToAbout = () => {
     opacity: 0.3;
     filter: blur(2px);    
 }
+
 .name{
     z-index: 1;
     position: absolute;  
@@ -146,5 +196,78 @@ const redirrectToAbout = () => {
   width: 100vw;
   z-index: 1;
 }
+.edit-name{
+  border: none;
+  background: white;
+    border-radius: 50px;
+  padding: 10px 10px;
+  width: 250px;
+  color: #000000;
+  font-size: small;
+}
+
+.desc-input{
+  border: none;
+  background: white;
+    border-radius: 20px;
+  padding: 10px 10px;
+  margin-top: 10px;
+  width: 250px;
+  color: #000000;
+  font-size: small;
+}
+.accept2 {
+  background: white;
+  border: none;
+  color: black;
+  position: absolute;
+
+  width: 100px;
+  border-radius: 50px;
+  right: 25px;
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.accept2:focus {
+  outline: none;
+  box-shadow: none;
+}
+.decline2 {
+  background: white;
+  border: none;
+  color: black;  
+  width: 100px;
+  border-radius: 50px;
+
+  margin-top: 20px;
+  padding: 10px 25px;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+}
+.decline2:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.input-name {
+  font-size: 15px;
+  margin-top: 10px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.input-price {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+.input-description {
+  font-size: 15px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha";
+}
+
 </style>
 

@@ -14,6 +14,7 @@ import Waiter from "@/components/cabinets/Waiter.vue";
 import Demo from "@/components/cabinets/Demo.vue";
 import EditMenu from "@/components/menu/EditMenu.vue";
 import Chef from "@/components/cabinets/Chef.vue";
+import History from "@/components/history/History.vue";
 
 
 
@@ -98,6 +99,11 @@ const routes = [
     name: "Chef",
     component: Chef,
   },
+  {
+    path:"/history",
+    name: "History",
+    component: History,
+  }
  
 ];
 

@@ -6,7 +6,9 @@
       </Button>
       <div class="header-text">Робочий кабінет</div>
 
-      <div v-if="!inRoom" class="chosen-text">
+      
+    </div>
+    <div v-if="!inRoom" class="chosen-text">
         Оберіть столик:
         <div class="divider-line1"></div>
         <div
@@ -14,36 +16,40 @@
           v-for="table in tableList"
           :key="table.table"
         >
-          <div>
+        <div class="border">
+          <div class="buttons">
             Столик: № {{ table.table }}
+          
+          </div>
+         
+          <div>
+            Замовлення:
+            <div v-for="order in table.orders" :key="order.name">
+              <div style="margin-left: 40px">{{ order.name }}</div>
+            </div>
             <Button
               v-if="!table.waiter"
               class="select-button"
               @click="waiterJoin(table.table)"
               >Виберіть</Button
             >
-            <Button class="delete">
-              <i class="pi pi-trash" @click="deleteTable(table.table)"></i>
+            <Button class="delete" @click="deleteTable(table.table)">
+              Видалити
             </Button>
           </div>
-          <div>Мейл: {{ table.users }}</div>
-          <div>
-            Замовлення:
-            <div v-for="order in table.orders" :key="order.name">
-              <div style="margin-left: 40px">{{ order.name }}</div>
-            </div>
           </div>
-
           <div class="divider-line2"></div>
         </div>
       </div>
       <div v-if="inRoom" class="chosen-text">
+        <div class="border2">
         Столик №{{ OrderList.table }}
-        <div v-for="order in OrderList.orders" :key="order.name">
+        <div>Замовлення:</div>
+        <div v-for="order in OrderList.orders" style="margin-left: 40px;" :key="order.name">
           <div>{{ order.name }}</div>
         </div>
+        </div>
       </div>
-    </div>
     <div v-if="cooking && inRoom" class="status">Готується</div>
     <div v-if="ready && inRoom && user" class="status">Очікування оплати</div>
     <Button
@@ -295,7 +301,7 @@ const redirectToHomePage = () => {
   position: absolute;
   top: 60px;
   left: 0;
-  margin-left: 15px;
+  margin-left: 8px;
   margin-right: 15px;
   margin-top: 8px;
   height: 40px;
@@ -328,7 +334,7 @@ const redirectToHomePage = () => {
 .select-button {
   position: relative;
 
-  background-color: #f9f6a5;
+  background-color: white;
   border: none;
   outline: none;
   border-radius: 50px;
@@ -423,17 +429,40 @@ const redirectToHomePage = () => {
   
   
  height: 40px;
+ margin-top: 20px;
   margin-left: 30px;
   border-radius: 50px;
-  background-color: #f9f6a5;
+  background-color: white;
   border: none;
   outline: none;
   font-size: 20px;
   font-weight: 500;
-  color: red;
+  color: black;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+  
 }
 .delete:focus {
   outline: none; /* Optional: Remove focus outline */
   box-shadow: none;
 }
+.buttons{
+ margin-top: 20px;
+}
+.border{
+  /* border: 1px solid #747070; */
+  border-radius: 20px;
+  padding: 10px;
+  background: #f9f6a5;
+  margin-top: 20px;
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
+  }
+  .border2{
+  /* border: 1px solid #747070; */
+  border-radius: 20px;
+  padding: 10px 50px 40px 20px;
+  
+  background: #f9f6a5;
+  margin-top: 20px;
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
+  }
 </style>

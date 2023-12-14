@@ -5,29 +5,38 @@
         <i class="pi pi-chevron-left"></i>
       </Button>
       <div class="header-text">Робочий кабінет</div>
-      <div v-if="!inRoom" class="chosen-text" >
+     
+      
+    </div>
+    <div v-if="!inRoom" class="chosen-text" >
         Оберіть столик:
         <div class="divider-line1"></div>
         <div style="margin-left: 40px; margin-top: 20px;" v-for="table in cookings" :key="table.table">         
-          <div>Столик: № {{table.table}}  <Button v-if="!table.chef" class="select-button" @click="chefJoin(table.table)" >Виберіть</Button> </div>                 
+          <div class="border">    
+          <div>Столик: № {{table.table}}  </div>                 
           <div>Замовлення: 
             <div v-for="order in table.orders" :key="order.name">
-              <div style="margin-left: 40px;">{{order.name}}</div>           
+              <div style="margin-left: 40px;">{{order.name}}</div>     
+                  
             </div>
-          </div> 
+            
+          </div>
+          <Button v-if="!table.chef" class="select-button" @click="chefJoin(table.table)" >Виберіть</Button>  
          
-          <div class="divider-line2"></div>
+         </div> 
         </div>
+        <div class="divider-line2"></div>
       </div>
       <div v-if="inRoom" class="chosen-text" >
+        <div class="border2">
         Столик №{{ order.table }}
-        <div v-for="order in order.orders" :key="order.name">
+        <div>Замовлення:</div>
+        <div v-for="order in order.orders" style="margin-left: 40px;" :key="order.name">
           <div>{{order.name}} </div>          
         </div>
+       </div>
        
       </div>
-      
-    </div>
     <div v-if="ready && inRoom" class="status">Готово</div>
     <Button v-if="cooking && inRoom" class="moveToKitchen" @click="markAsReady">
         Позначити як готове
@@ -207,7 +216,7 @@ const redirectToHomePage = () => {
   position: absolute;
   top: 60px;
   left: 0;
-  margin-left: 15px;
+  margin-left: 8px;
   margin-right: 15px;
   margin-top: 8px;
   height: 40px;
@@ -234,22 +243,24 @@ const redirectToHomePage = () => {
   background-color: #747070;
   position: absolute;
   margin-top: 10px;
-  margin-left: -56px;
+  margin-left: -16px;
   width: 100vw;
 }
 .select-button {
-    position: relative;  
-   
-   
-    
-    background-color: #f9f6a5;
-    border: none;
-    outline: none;
-    border-radius: 50px;
-    font-size: 20px;
-    font-weight: 500;
-    color: #000000;
-    font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
+ 
+  position: relative;
+
+  background-color: white;
+  border: none;
+  outline: none;
+  margin-top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 500;
+  color: #000000;
+  font-family: "Neucha"; /* Use 'Neucha' font and fall back to cursive if not available */
 }
 
 .select-button:focus {
@@ -294,4 +305,22 @@ const redirectToHomePage = () => {
   padding: 10px 32px;
   font-family: "Neucha";
 }
+.border{
+  /* border: 1px solid #747070; */
+  border-radius: 20px;
+  padding: 10px 50px 10px 20px;
+  background: #f9f6a5;
+
+  margin-top: 20px;
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
+  }
+  .border2{
+  /* border: 1px solid #747070; */
+  border-radius: 20px;
+  padding: 10px 50px 10px 20px;
+  background: #f9f6a5;
+    
+  margin-top: 20px;
+  box-shadow: 0px 5px 6px rgba(0, 0, 0, 0.3); /* Adjust values as needed */
+  }
 </style>

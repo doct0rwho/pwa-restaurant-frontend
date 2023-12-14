@@ -150,7 +150,9 @@ const registerClient = () => {
       axios.post('https://diploma-lya6.onrender.com/login/with/password/worker', {
         email: email.value,
         password: password.value,        
-      }).then((response) => {
+      },{
+  withCredentials: true,
+}).then((response) => {
         console.log(response)
         const store = localStorage;
 

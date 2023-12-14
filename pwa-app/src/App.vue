@@ -21,7 +21,8 @@
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
-            !isWorkerChefRoute
+            !isWorkerChefRoute &&
+            !isHistoryRoute
           "
           class="user"
         >
@@ -42,7 +43,8 @@
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
             !isEditMenuRoute &&
-            !isWorkerChefRoute
+            !isWorkerChefRoute &&
+            !isHistoryRoute
           "
           class="search"
         >
@@ -155,7 +157,8 @@
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
-            !isWorkerChefRoute
+            !isWorkerChefRoute &&
+            !isHistoryRoute
           "
           class="user"
         >
@@ -176,7 +179,8 @@
             !isWorkerWaiterRoute &&
             !isWorkerCookRoute &&
             !isEditMenuRoute  &&
-            !isWorkerChefRoute
+            !isWorkerChefRoute &&
+            !isHistoryRoute
           "
           class="search"
         >
@@ -327,6 +331,9 @@ export default {
     isWorkerChefRoute() {
       return this.$route.path === "/workerSpace/chef";
     },
+    isHistoryRoute(){
+      return this.$route.path === "/history";
+    }
   },
   created() {
     this.checkDevice();
