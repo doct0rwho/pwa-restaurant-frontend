@@ -103,9 +103,9 @@
         <div class="card flex justify-content-center">
           <Sidebar v-model:visible="visible" class="custom-sidebar">
             <div>
-              <Button class="cross-button" @click="visible = false">
+              <!-- <Button class="cross-button" @click="visible = false">
                 <i class="pi pi-times-circle"></i>
-              </Button>
+              </Button> -->
               <div>
                 <Button
                   class="client-auth-button"
