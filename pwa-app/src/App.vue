@@ -6,52 +6,7 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button
-          v-if="
-            !isAuthRoute &&
-            !isMenuRoute &&
-            !isFavoritesRoute &&
-            !isProfileRoute &&
-            !isSettingsRoute &&
-            !isStaffRoute &&
-            !isStaffProfileRoute &&
-            !isStaffSettingsRoute &&
-            !isWorkerDemoRoute &&
-            !isWorkerAdminRoute &&
-            !isWorkerWaiterRoute &&
-            !isWorkerCookRoute &&
-            !isEditMenuRoute  &&
-            !isWorkerChefRoute &&
-            !isHistoryRoute &&
-            !isApprovedRoute
-          "
-          class="user"
-        >
-          <i class="pi pi-search"></i>
-        </Button>
-        <Button
-          v-if="
-            !isAuthRoute &&
-            !isMenuRoute &&
-            !isFavoritesRoute &&
-            !isProfileRoute &&
-            !isSettingsRoute &&
-            !isStaffRoute &&
-            !isStaffProfileRoute &&
-            !isStaffSettingsRoute &&
-            !isWorkerDemoRoute &&
-            !isWorkerAdminRoute &&
-            !isWorkerWaiterRoute &&
-            !isWorkerCookRoute &&
-            !isEditMenuRoute &&
-            !isWorkerChefRoute &&
-            !isHistoryRoute &&
-            !isApprovedRoute
-          "
-          class="search"
-        >
-          <i class="pi pi-user"></i>
-        </Button>
+        
         <div class="card flex justify-content-center">
           <Sidebar v-model:visible="visible" class="custom-sidebar">
             <div>
@@ -144,52 +99,7 @@
         <Button v-if="!isAuthRoute" class="transparent-button" @click="open">
           <i class="pi pi-bars"></i>
         </Button>
-        <Button
-          v-if="
-            !isAuthRoute &&
-            !isMenuRoute &&
-            !isFavoritesRoute &&
-            !isProfileRoute &&
-            !isSettingsRoute &&
-            !isStaffRoute &&
-            !isStaffProfileRoute &&
-            !isStaffSettingsRoute &&
-            !isWorkerDemoRoute &&
-            !isWorkerAdminRoute &&
-            !isWorkerWaiterRoute &&
-            !isWorkerCookRoute &&
-            !isEditMenuRoute  &&
-            !isWorkerChefRoute &&
-            !isHistoryRoute &&
-            !isApprovedRoute
-          "
-          class="user"
-        >
-          <i class="pi pi-search"></i>
-        </Button>
-        <Button
-          v-if="
-            !isAuthRoute &&
-            !isMenuRoute &&
-            !isFavoritesRoute &&
-            !isProfileRoute &&
-            !isSettingsRoute &&
-            !isStaffRoute &&
-            !isStaffProfileRoute &&
-            !isStaffSettingsRoute &&
-            !isWorkerDemoRoute &&
-            !isWorkerAdminRoute &&
-            !isWorkerWaiterRoute &&
-            !isWorkerCookRoute &&
-            !isEditMenuRoute  &&
-            !isWorkerChefRoute &&
-            !isHistoryRoute &&
-            !isApprovedRoute
-          "
-          class="search"
-        >
-          <i class="pi pi-user"></i>
-        </Button>
+       
         <div class="card flex justify-content-center">
           <Sidebar v-model:visible="visible" class="custom-sidebar">
             <div>
